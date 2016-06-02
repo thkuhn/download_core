@@ -1,0 +1,31 @@
+<?php $this->extend('block_searchable'); ?>
+
+<?php $this->block('content'); ?>
+<ul>
+<?php foreach($this->items as $item): ?>
+
+    <li>
+	<div class="item <?=$item->css; ?>">
+	    <div class="image">
+		<?php foreach($item->preview as $image): ?>
+		<div class="slide"<?php if($image->css == ''): ?> style="display: none;"<?php endif; ?>>
+		<a href="<?=$image->path; ?>" title="Anklicken f&uuml;r eine Vorschau" data-lightbox="<?=md5($item->id); ?>" class="cboxElement"><img src="<?=$image->path; ?>"></a>
+		</div>
+		<?php endforeach; ?>
+		<div class="download" style="margin-top: 8px;" align="center"><small>Vorschau</small></div>
+	    </div>
+	    <?php if($item->url): ?><a href="<?=$item->url;?>"><?php endif; ?>
+	    <div class="text">
+		<h2><?=$item->archiv; ?></h2>
+		<h3><?=$item->category; ?></h3>
+		<p class="download title"><?=$item->title; ?></p>
+		<p class="download title">Datei herunterladen</p>
+	    </div>
+	    <?php if($item->url): ?></a><?php endif; ?>
+	</div>
+    </li>
+
+<?php endforeach; ?>
+</ul>
+
+<?php $this->endBlock(); ?>
