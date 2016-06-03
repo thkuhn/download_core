@@ -47,44 +47,44 @@ class ModuleDownloadElement extends \Module
 		{
 			$objItem = (object) $objData->row();
 
-			$objItem->archiv = $objArchiv->title;
-
-			if($objCategory->singleSRC)
-			{
-				$objItem->archivIcon = \FilesModel::findByUuid($objCategory->singleSRC)->path;
-			}
-
-			$objItem->category = $objCategory->title;
-			$objItem->singleSRC = deserialize($objItem->singleSRC);
-
-			$arrImages = array();
-			if(is_array($objItem->singleSRC))
-			{
-				foreach($objItem->singleSRC as $image)
-				{
-					$arrImages[] = (object) array
-					(
-						'css'  => '',
-						'path' => \FilesModel::findByUuid($image)->path
-					);
-				}
-
-				$arrImages[0]->css = 'first';
-			}
-
-
-			if(FE_USER_LOGGED_IN)
-			{
-				$objItem->url = sprintf($strUrl, $objItem->id);
-				$objItem->css = 'active';
-				$objItem->preview = $arrImages;
-			}
-			else
-			{
-				$objItem->css = 'inactive';
-				$objItem->preview = array($arrImages[0]);
-
-			}
+#			$objItem->archiv = $objArchiv->title;
+#
+#			if($objCategory->singleSRC)
+#			{
+#				$objItem->archivIcon = \FilesModel::findByUuid($objCategory->singleSRC)->path;
+#			}
+#
+#			$objItem->category = $objCategory->title;
+#			$objItem->singleSRC = deserialize($objItem->singleSRC);
+#
+#			$arrImages = array();
+#			if(is_array($objItem->singleSRC))
+#			{
+#				foreach($objItem->singleSRC as $image)
+#				{
+#					$arrImages[] = (object) array
+#					(
+#						'css'  => '',
+#						'path' => \FilesModel::findByUuid($image)->path
+#					);
+#				}
+#
+#				$arrImages[0]->css = 'first';
+#			}
+#
+#
+#			if(FE_USER_LOGGED_IN)
+#			{
+#				$objItem->url = sprintf($strUrl, $objItem->id);
+#				$objItem->css = 'active';
+#				$objItem->preview = $arrImages;
+#			}
+#			else
+#			{
+#				$objItem->css = 'inactive';
+#				$objItem->preview = array($arrImages[0]);
+#
+#			}
 
 			$arrData[] = $objItem;
 		}

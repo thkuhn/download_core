@@ -24,6 +24,10 @@ ClassLoader::addClasses(array
 
 TemplateLoader::addFiles(array
 (
+	'category_boxed'   => 'system/modules/download_core/templates/listing',
+	'category_download'   => 'system/modules/download_core/templates/listing',
+	'category_list'   => 'system/modules/download_core/templates/listing',
+
 	'mod_download_archiv'   => 'system/modules/download_core/templates/modules',
 	'mod_download_category' => 'system/modules/download_core/templates/modules',
 	'mod_download_element'  => 'system/modules/download_core/templates/modules'

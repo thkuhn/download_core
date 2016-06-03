@@ -40,22 +40,42 @@ class ModuleDownloadCategory extends \Module
 		$objPage = \PageModel::findById($GLOBALS['objPage']->id);
 		$strUrl = \Controller::generateFrontendUrl($objPage->row(), '/element/%s');
 
+		$arrData     = array();
 		$objArchiv   = \DownloadArchivModel::findByAlias(\Input::Get('category'));
 		$objCategory = \DownloadCategoryModel::findByPid($objArchiv->id);
 
 		while($objCategory->next()) {
-			$objItem = (object) $objCategory->row();
-			$objElement = \DownloadItemModel::findByPid($objCategory->id);
+			$arrElement = $objCategory->row();
+			$objDownloads = \DownloadItemModel::findByPid($objCategory->id);
 
-			if($objElement !== null) {
-				while($objElement->next()) {
-#					echo $objElement->title;
+			$arrElement['downloads'] = array();
+
+			if($objDownloads !== null) {
+				while($objDownloads->next()) {
+					$objDownload = (object) $objDownloads->row();
+
+					foreach(deserialize($objDownload->fileSRC) as $file) {
+						$arrFiles[] = \FilesModel::findByUuid($file);
+					}
+
+					$arrDownloads[] = $objDownload;
 				}
+
+				$arrElement['downloads'] = isset($arrDownloads) ? $arrDownloads : array();
 			}
 
-			$arrData[] = $objItem;
+			$arrData[] = $arrElement;
 		}
 
-		$this->Template->items = $arrData;
+		$arrData[0]['css'] = ' first';
+		$arrData[count($arrData) - 1]['css'] = ' last';
+
+		foreach($arrData as $element) {
+			$objTemplate = new \FrontendTemplate($this->category_template);
+			$objTemplate->setData($element);
+			$html .= $objTemplate->parse();
+		}
+
+		$this->Template->html = $html;
 	}
 }

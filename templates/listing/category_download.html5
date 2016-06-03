@@ -1,0 +1,24 @@
+<div class="category_download category<?php echo $this->css; ?>" id="category_<?=$this->id; ?>">
+  <h2><?php echo $this->title; ?></h2>
+
+    <?php if ($this->image->addImage): ?>
+    <div class="image_container<?php echo $this->image->floatClass; ?>"<?php if ($this->image->margin || $this->image->float): ?> style="<?php echo trim($this->image->margin . $this->image->float); ?>"<?php endif; ?>>
+    <?php if ($this->image->href): ?>
+    <a href="<?php echo $this->image->href; ?>"<?php echo $this->image->attributes; ?> title="<?php echo $this->image->alt; ?>">
+    <?php endif; ?>
+        <img src="<?php echo $this->image->src; ?>"<?php echo $this->image->imgSize; ?> alt="<?php echo $this->image->alt; ?>">
+    <?php if ($this->image->href): ?>
+    </a>
+    <?php endif; ?>
+    <?php if ($this->image->caption): ?>
+    <div class="caption"><?php echo $this->image->caption; ?></div>
+    <?php endif; ?>
+    </div>
+    <?php endif; ?>
+
+  <ul>
+    <?php foreach($this->downloads as $element): ?>
+    <li><?=$element->title; ?></li>
+    <?php endforeach; ?>
+  </ul>
+</div>
