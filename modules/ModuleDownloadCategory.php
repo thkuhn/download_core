@@ -1,6 +1,7 @@
 <?php
 
 namespace pixelSpreadde\Frontend;
+use pixelSpreadde\Models, pixelSpreadde\Classes;
 
 class ModuleDownloadCategory extends \Module 
 {
@@ -12,7 +13,7 @@ class ModuleDownloadCategory extends \Module
 		{
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
-			$objTemplate->wildcard = '### DMS LIST ###';
+			$objTemplate->wildcard = '### ' . strtoupper($GLOBALS['TL_LANG']['FMD'][$this->type][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -26,6 +27,8 @@ class ModuleDownloadCategory extends \Module
 
 	protected function compile()
 	{
+#		$strTmp = md5(uniqid(mt_rand(), true));
+#		$objArchive = new \ZipWriter('system/tmp/'. $strTmp);
 		if(\Input::Get('download') && FE_USER_LOGGED_IN)
 		{
 			$objDownload = $this->Database->prepare("SELECT * FROM tl_download_item WHERE id=?")->execute(\Input::Get('download'));
@@ -35,59 +38,23 @@ class ModuleDownloadCategory extends \Module
 		}
 
 		$objPage = \PageModel::findById($GLOBALS['objPage']->id);
-		$strUrl = $this->generateFrontendUrl($objPage->row(), '/download/%s');
+		$strUrl = \Controller::generateFrontendUrl($objPage->row(), '/element/%s');
 
-		$objCategory = $this->Database->prepare("SELECT * FROM tl_download_category WHERE alias=?")->execute(\Input::Get('category'));
-		$objArchiv   = $this->Database->prepare("SELECT * FROM tl_download_archiv WHERE id=?")->execute($objCategory->pid);
+		$objArchiv   = \DownloadArchivModel::findByAlias(\Input::Get('category'));
+		$objCategory = \DownloadCategoryModel::findByPid($objArchiv->id);
 
-		$objData = $this->Database->prepare("SELECT * FROM tl_download_item WHERE pid=? && published=1 ORDER BY sorting ASC")->execute($objCategory->id);
-		while($objData->next())
-		{
-			$objItem = (object) $objData->row();
+		while($objCategory->next()) {
+			$objItem = (object) $objCategory->row();
+			$objElement = \DownloadItemModel::findByPid($objCategory->id);
 
-			$objItem->archiv = $objArchiv->title;
-
-			if($objCategory->singleSRC)
-			{
-				$objItem->archivIcon = \FilesModel::findByUuid($objCategory->singleSRC)->path;
-			}
-
-			$objItem->category = $objCategory->title;
-			$objItem->singleSRC = deserialize($objItem->singleSRC);
-
-			$arrImages = array();
-			if(is_array($objItem->singleSRC))
-			{
-				foreach($objItem->singleSRC as $image)
-				{
-					$arrImages[] = (object) array
-					(
-						'css'  => '',
-						'path' => \FilesModel::findByUuid($image)->path
-					);
+			if($objElement !== null) {
+				while($objElement->next()) {
+#					echo $objElement->title;
 				}
-
-				$arrImages[0]->css = 'first';
-			}
-
-
-			if(FE_USER_LOGGED_IN)
-			{
-				$objItem->url = sprintf($strUrl, $objItem->id);
-				$objItem->css = 'active';
-				$objItem->preview = $arrImages;
-			}
-			else
-			{
-				$objItem->css = 'inactive';
-				$objItem->preview = array($arrImages[0]);
-
 			}
 
 			$arrData[] = $objItem;
 		}
-
-#		if(!count($arrDaata)) { $arrData = array(); }
 
 		$this->Template->items = $arrData;
 	}

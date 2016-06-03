@@ -1,7 +1,7 @@
 <?php
 
 $GLOBALS['TL_DCA']['tl_module']['palettes']['download_archiv']   = '{title_legend},name,headline,type;{config_legend},download_archiv,jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['download_category'] = '{title_legend},name,headline,type;{config_legend},download_archiv,download_category;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['download_category'] = '{title_legend},name,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['download_archiv'] = array
 (

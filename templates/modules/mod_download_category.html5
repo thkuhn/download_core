@@ -1,31 +1,26 @@
-<?php $this->extend('block_searchable'); ?>
+<div class="<?php echo $this->class; ?>"<?php echo $this->cssID; ?><?php if ($this->style): ?> style="<?php echo $this->style; ?>"<?php endif; ?>>
+    <?php if($this->headline): ?>
+    <<?php echo $this->hl; ?>><?php echo $this->headline; ?></<?php echo $this->hl; ?>>
+    <?php endif; ?>
 
-<?php $this->block('content'); ?>
-<ul>
-<?php foreach($this->items as $item): ?>
+    <?php foreach($this->items as $item): ?>
+    <div class="title<?php echo $item->css; ?>">
+	<h2><?php echo $item->title; ?></h2>
 
-    <li>
-	<div class="item <?=$item->css; ?>">
-	    <div class="image">
-		<?php foreach($item->preview as $image): ?>
-		<div class="slide"<?php if($image->css == ''): ?> style="display: none;"<?php endif; ?>>
-		<a href="<?=$image->path; ?>" title="Anklicken f&uuml;r eine Vorschau" data-lightbox="<?=md5($item->id); ?>" class="cboxElement"><img src="<?=$image->path; ?>"></a>
-		</div>
-		<?php endforeach; ?>
-		<div class="download" style="margin-top: 8px;" align="center"><small>Vorschau</small></div>
-	    </div>
-	    <?php if($item->url): ?><a href="<?=$item->url;?>"><?php endif; ?>
-	    <div class="text">
-		<h2><?=$item->archiv; ?></h2>
-		<h3><?=$item->category; ?></h3>
-		<p class="download title"><?=$item->title; ?></p>
-		<p class="download title">Datei herunterladen</p>
-	    </div>
-	    <?php if($item->url): ?></a><?php endif; ?>
-	</div>
-    </li>
-
-<?php endforeach; ?>
-</ul>
-
-<?php $this->endBlock(); ?>
+    <?php if ($item->image->addImage): ?>
+    <div class="image_container<?php echo $item->image->floatClass; ?>"<?php if ($item->image->margin || $item->image->float): ?> style="<?php echo trim($item->image->margin . $item->image->float); ?>"<?php endif; ?>>
+    <?php if ($item->image->href): ?>
+    <a href="<?php echo $item->image->href; ?>"<?php echo $item->image->attributes; ?> title="<?php echo $item->image->alt; ?>">
+    <?php endif; ?>
+        <img src="<?php echo $item->image->src; ?>"<?php echo $item->image->imgSize; ?> alt="<?php echo $item->image->alt; ?>">
+    <?php if ($item->image->href): ?>
+    </a>
+    <?php endif; ?>
+    <?php if ($item->image->caption): ?>
+    <div class="caption"><?php echo $item->image->caption; ?></div>
+    <?php endif; ?>
+    </div>
+    <?php endif; ?>
+    </div>
+    <?php endforeach; ?>
+</div>

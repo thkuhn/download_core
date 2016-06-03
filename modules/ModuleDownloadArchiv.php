@@ -1,6 +1,7 @@
 <?php
 
 namespace pixelSpreadde\Frontend;
+use pixelSpreadde\Models, pixelSpreadde\Classes;
 
 class ModuleDownloadArchiv extends \Module 
 {
@@ -12,7 +13,7 @@ class ModuleDownloadArchiv extends \Module
 		{
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
-			$objTemplate->wildcard = '### DMS LIST ###';
+			$objTemplate->wildcard = '### ' . strtoupper($GLOBALS['TL_LANG']['FMD'][$this->type][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -27,23 +28,42 @@ class ModuleDownloadArchiv extends \Module
 	protected function compile()
 	{
 		$objPage = \PageModel::findById($this->jumpTo);
-		$strUrl = $this->generateFrontendUrl($objPage->row(), '/category/%s');
+		$strUrl = \Controller::generateFrontendUrl($objPage->row(), '/category/%s');
 
-		$objData   = $this->Database->prepare("SELECT * FROM tl_download_archiv WHERE id IN(" . implode(",", $this->download_archiv) . ") && published=?")->execute(1);
-		while($objData->next())
-		{
-#			$objCount = $this->Database->prepare("SELECT * FROM tl_download_item WHERE pid=? && published=1 ORDER BY sorting ASC")->execute($objData->id);
-
-			$objItem = (object) $objData->row();
-			$objItem->url = sprintf($strUrl, $objItem->alias);
-			$objItem->count = $objCount->count();
-
-			if($objData->singleSRC)
+		$objArchiv = \DownloadArchivModel::findByIds(deserialize($this->download_archiv));
+		if($objArchiv !== null) {
+			while($objArchiv->next())
 			{
-				$objItem->archivIcon = \FilesModel::findByUuid($objData->singleSRC)->path;
+#				$objCount = $this->Database->prepare("SELECT * FROM tl_download_item WHERE pid=? && published=1 ORDER BY sorting ASC")->execute($objData->id);
+
+				$objItem = (object) $objArchiv->row();
+				$objItem->url = sprintf($strUrl, $objItem->alias);
+#				$objItem->count = $objCount->count();
+
+				if($objItem->addImage) {
+					$objFile = \FilesModel::findByUuid($objItem->singleSRC);
+					$objImage = new \FrontendTemplate();
+
+					$this->addImageToTemplate($objImage, array (
+						'addImage'    => 1,
+						'singleSRC'   => $objFile->path,
+						'alt'         => null,
+						'size'        => $this->dms_imageSize,
+						'imagemargin' => $this->dms_imageMargin,
+						'imageUrl'    => $objItem->url,
+						'caption'     => null,
+						'floating'    => $this->dms_imageFloating,
+						'fullsize'    => $this->dms_imageFullsize
+					), null,'id' . $objItem->imageSrc_thumb);
+
+					$objItem->image = $objImage;
+				}
+
+				$arrData[] = $objItem;
 			}
 
-			$arrData[] = $objItem;
+			$arrData[0]->css = ' first';
+			$arrData[count($arrData) - 1]->css = ' last';
 		}
 
 		$this->Template->items = $arrData;
