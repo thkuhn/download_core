@@ -41,8 +41,15 @@ class ModuleDownloadCategory extends \Module
 		$strUrl = \Controller::generateFrontendUrl($objPage->row(), '/element/%s');
 
 		$arrData     = array();
-		$objArchiv   = \DownloadArchivModel::findByAlias(\Input::Get('category'));
-		$objCategory = \DownloadCategoryModel::findByPid($objArchiv->id);
+
+		if(\Input::Get('archiv')) {
+			$objArchiv   = \DownloadArchivModel::findByAlias(\Input::Get('archiv'));
+			$objCategory = \DownloadCategoryModel::findByPid($objArchiv->id);
+		}
+		elseif(\Input::Get('category')) {
+			$objCategory = \DownloadCategoryModel::findByAlias(\Input::Get('category'));
+			$objArchiv   = \DownloadArchivModel::findById($objCategory->pid);
+		}
 
 		while($objCategory->next()) {
 			$arrElement = $objCategory->row();

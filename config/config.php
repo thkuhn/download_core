@@ -12,7 +12,8 @@ array_insert($GLOBALS['BE_MOD']['content'], count($GLOBALS['BE_MOD']['content'])
 array_insert($GLOBALS['FE_MOD']['download_core'], 0, array
 (
     'download_archiv'            => 'ModuleDownloadArchiv',
-    'download_category'          => 'ModuleDownloadCategory'
+    'download_category'          => 'ModuleDownloadCategory',
+    'download_index'             => 'ModuleDownloadIndex'
 ));
 
 $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('pixelSpreadde\Classes\InsertTags', 'myReplaceInsertTags');

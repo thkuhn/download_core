@@ -28,7 +28,7 @@ class ModuleDownloadArchiv extends \Module
 	protected function compile()
 	{
 		$objPage = \PageModel::findById($this->jumpTo);
-		$strUrl = \Controller::generateFrontendUrl($objPage->row(), '/category/%s');
+		$strUrl = \Controller::generateFrontendUrl($objPage->row(), '/archiv/%s');
 
 		$objArchiv = \DownloadArchivModel::findByIds(deserialize($this->download_archiv));
 		if($objArchiv !== null) {
