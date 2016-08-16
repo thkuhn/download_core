@@ -8,6 +8,7 @@ $GLOBALS['TL_LANG']['tl_download_item']['published_legend'] = 'Ver&ouml;ffentlic
 
 
 $GLOBALS['TL_LANG']['tl_download_item']['title'] = array('Bezeichnung', 'Geben Sie eine Bezeichnung f&uuml;r das Download-Element an.');
+$GLOBALS['TL_LANG']['tl_download_item']['type'] = array('Typ', 'W&auml;hlen Sie bitte den Typen aus.');
 $GLOBALS['TL_LANG']['tl_download_item']['teaser'] = array('Teaser', 'Geben Sie einen Teaser bzw. eine Kurzbeschreibung f&uuml;r das Download-Element ein.');
 $GLOBALS['TL_LANG']['tl_download_item']['text'] = array('Beschreibung', 'Geben Sie eine aussagekr&aumlftige Beschreibung f&uuml;r das Download-Element ein.');
 $GLOBALS['TL_LANG']['tl_download_item']['protected'] = array('Download-Element sch&uuml;tzen', 'M&ouml;chten Sie dieses Download-Element sch&uuml;tzen.');
@@ -18,3 +19,7 @@ $GLOBALS['TL_LANG']['tl_download_item']['fileSRC'] = array('Dateien', 'W&auml;hl
 $GLOBALS['TL_LANG']['tl_download_item']['published'] = array('Ver&ouml;ffentlichen', 'Soll das Download-Element ver&ouml;ffentlicht werden?');
 $GLOBALS['TL_LANG']['tl_download_item']['start'] = array('Anzeigen ab', 'Das Download-Element erst ab diesem Tag auf der Webseite anzeigen.');
 $GLOBALS['TL_LANG']['tl_download_item']['stop'] = array('Anzeigen bis', 'Das Download-Element nur bis zu diesem Tag auf der Webseite anzeigen.');
+
+$GLOBALS['TL_LANG']['tl_download_item']['type_option']['single'] = 'eine einzelne Datei';
+$GLOBALS['TL_LANG']['tl_download_item']['type_option']['multi'] = 'mehere Dateien';
+$GLOBALS['TL_LANG']['tl_download_item']['type_option']['zipper'] = 'mehere Dateien gezipped';

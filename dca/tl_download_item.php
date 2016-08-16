@@ -83,8 +83,8 @@ $GLOBALS['TL_DCA']['tl_download_item'] = array
 	),
 	'palettes' => array
 	(
-		'__selector__'                => array('addImage', 'protected', 'published'),
-		'default'                     => '{title_legend},title,teaser,text;{protected_legend},protected;{image_legend},addImage;{download_legend},fileSRC;{published_legend},published',
+		'__selector__'                => array('type', 'addImage', 'protected', 'published'),
+		'default'                     => '{title_legend},title,type,teaser,text;{protected_legend},protected;{image_legend},addImage;{download_legend},fileSRC;{published_legend},published',
 	),
 	'subpalettes' => array
 	(
@@ -108,15 +108,25 @@ $GLOBALS['TL_DCA']['tl_download_item'] = array
 		),
 		'sorting' => array
 		(
-			'sql'                       => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		),
 		'title' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_download_item']['title'],
 			'inputType'               => 'text',
 			'search'                  => true,
-			'eval'                    => array('mandatory'=>false, 'maxlength'=>255, 'tl_class'=>'long'),
+			'eval'                    => array('mandatory'=>false, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''" 
+		),
+		'type' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_download_item']['type'],
+			'inputType'               => 'select',
+			'search'                  => true,
+			'options'                 => array('single', 'multi', 'zipper'),
+			'reference'               => &$GLOBALS['TL_LANG']['tl_download_item']['type_option'],
+			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50', 'submitOnChange'=>true),
+			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'teaser' => array
 		(
