@@ -52,13 +52,13 @@ $GLOBALS['TL_DCA']['tl_download_item'] = array
 				'href'                => 'act=edit',
 				'icon'                => 'edit.gif',
 			),
-#			'copy' => array
-#			(
-#				'label'               => &$GLOBALS['TL_LANG']['tl_content']['copy'],
-#				'href'                => 'act=paste&amp;mode=copy',
-#				'icon'                => 'copy.gif',
-#				'attributes'          => 'onclick="Backend.getScrollOffset()"'
-#			),
+			'copy' => array
+			(
+				'label'               => &$GLOBALS['TL_LANG']['tl_content']['copy'],
+				'href'                => 'act=paste&amp;mode=copy',
+				'icon'                => 'copy.gif',
+				'attributes'          => 'onclick="Backend.getScrollOffset()"'
+			),
 			'cut' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_mev_books_elements']['cut'],

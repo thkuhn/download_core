@@ -29,57 +29,68 @@ class ModuleDownloadCategory extends \Module
 	{
 #		$strTmp = md5(uniqid(mt_rand(), true));
 #		$objArchive = new \ZipWriter('system/tmp/'. $strTmp);
-		if(\Input::Get('download') && FE_USER_LOGGED_IN)
+		if(\Input::Get('downloadId') && FE_USER_LOGGED_IN)
 		{
-			$objDownload = $this->Database->prepare("SELECT * FROM tl_download_item WHERE id=?")->execute(\Input::Get('download'));
-			$objFile = \FilesModel::findByUuid($objDownload->fileSRC);
+			$objDownload = $this->Database->prepare("SELECT * FROM tl_download_item WHERE id=?")->execute(\Input::Get('downloadId'));
+			$objDownload->fileSRC = deserialize($objDownload->fileSRC);
 
-			$this->sendFileToBrowser($objFile->path);
+			$objFile = \FilesModel::findByUuid($objDownload->fileSRC[0]);
+
+			if($objDownload->type == 'single')
+			{
+				$this->sendFileToBrowser($objFile->path);
+			}
 		}
 
 		$objPage = \PageModel::findById($GLOBALS['objPage']->id);
 		$strUrl = \Controller::generateFrontendUrl($objPage->row(), '/element/%s');
 
-		$arrData     = array();
-
-		if(\Input::Get('archiv')) {
-			$objArchiv   = \DownloadArchivModel::findByAlias(\Input::Get('archiv'));
-			$objCategory = \DownloadCategoryModel::findByPid($objArchiv->id);
-		}
-		elseif(\Input::Get('category')) {
+		if(\Input::Get('category'))
+		{
 			$objCategory = \DownloadCategoryModel::findByAlias(\Input::Get('category'));
 			$objArchiv   = \DownloadArchivModel::findById($objCategory->pid);
 		}
 
-		while($objCategory->next()) {
-			$arrElement = $objCategory->row();
-			$objDownloads = \DownloadItemModel::findByPid($objCategory->id);
+		$arrDownloads = array();
+		$objDownloads = \DownloadItemModel::findByPid($objCategory->id);
 
-			$arrElement['downloads'] = array();
+		if($objDownloads !== null)
+		{
+			while($objDownloads->next())
+			{
+				$objDownload = (object) $objDownloads->row();
 
-			if($objDownloads !== null) {
-				while($objDownloads->next()) {
-					$objDownload = (object) $objDownloads->row();
-
-					foreach(deserialize($objDownload->fileSRC) as $file) {
+				if($objDownload->addImage)
+				{
+					$arrFiles = array();
+					foreach(deserialize($objDownload->singleSRC) as $file)
+					{
 						$arrFiles[] = \FilesModel::findByUuid($file);
 					}
 
-					$arrDownloads[] = $objDownload;
+					$objDownload->singleSRC = $arrFiles;
+					$objDownload->previewImage = $arrFiles[0];
 				}
 
-				$arrElement['downloads'] = isset($arrDownloads) ? $arrDownloads : array();
-			}
+				$arrFiles = array();
+				foreach(deserialize($objDownload->fileSRC) as $file)
+				{
+					$arrFiles[] = \FilesModel::findByUuid($file);
+				}
 
-			$arrData[] = $arrElement;
+				$objDownload->fileSRC = $arrFiles;
+				$objDownload->url = \Environment::Get('request') . "?downloadId=" . $objDownload->id;
+				$arrDownloads[] = $objDownload;
+			}
 		}
 
-		$arrData[0]['css'] = ' first';
-		$arrData[count($arrData) - 1]['css'] = ' last';
+		$arrDownloads[0]->css .= ' first';
+		$arrDownloads[count($arrDownloads) - 1]->css .= ' last';
 
-		foreach($arrData as $element) {
+		foreach($arrDownloads as $element)
+		{
 			$objTemplate = new \FrontendTemplate($this->category_template);
-			$objTemplate->setData($element);
+			$objTemplate->setData(((array) $element));
 			$html .= $objTemplate->parse();
 		}
 
