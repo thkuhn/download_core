@@ -3,7 +3,7 @@
 namespace pixelSpreadde\Frontend;
 use pixelSpreadde\Models, pixelSpreadde\Classes;
 
-class ModuleDownloadCategory extends \Module 
+class ModuleDownloadCategory extends \ModuleDownload
 {
 	protected $strTemplate = 'mod_download_category';
 
@@ -31,15 +31,16 @@ class ModuleDownloadCategory extends \Module
 #		$objArchive = new \ZipWriter('system/tmp/'. $strTmp);
 		if(\Input::Get('downloadId') && FE_USER_LOGGED_IN)
 		{
-			$objDownload = $this->Database->prepare("SELECT * FROM tl_download_item WHERE id=?")->execute(\Input::Get('downloadId'));
-			$objDownload->fileSRC = deserialize($objDownload->fileSRC);
-
-			$objFile = \FilesModel::findByUuid($objDownload->fileSRC[0]);
-
-			if($objDownload->type == 'single')
-			{
-				$this->sendFileToBrowser($objFile->path);
-			}
+			$this->sendDownloadToBrowser(\Input::Get('downloadId'));
+#			$objDownload = $this->Database->prepare("SELECT * FROM tl_download_item WHERE id=?")->execute(\Input::Get('downloadId'));
+#			$objDownload->fileSRC = deserialize($objDownload->fileSRC);
+#
+#			$objFile = \FilesModel::findByUuid($objDownload->fileSRC[0]);
+#
+#			if($objDownload->type == 'single')
+#			{
+#				$this->sendFileToBrowser($objFile->path);
+#			}
 		}
 
 		$objPage = \PageModel::findById($GLOBALS['objPage']->id);
