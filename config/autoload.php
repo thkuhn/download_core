@@ -16,6 +16,7 @@ ClassLoader::addClasses(array
 	'pixelSpreadde\Models\DownloadItemModel'        => 'system/modules/download_core/models/DownloadItemModel.php',
 
 	'pixelSpreadde\Classes\InsertTags'              => 'system/modules/download_core/classes/InsertTags.php',
+	'pixelSpreadde\Classes\ModuleDownload'          => 'system/modules/download_core/classes/ModuleDownload.php',
 
 	'pixelSpreadde\Frontend\ModuleDownloadArchiv'   => 'system/modules/download_core/modules/ModuleDownloadArchiv.php',
 	'pixelSpreadde\Frontend\ModuleDownloadCategory' => 'system/modules/download_core/modules/ModuleDownloadCategory.php',
