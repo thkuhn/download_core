@@ -84,14 +84,17 @@ class ModuleDownloadCategory extends \Module
 			}
 		}
 
-		$arrDownloads[0]->css .= ' first';
-		$arrDownloads[count($arrDownloads) - 1]->css .= ' last';
-
-		foreach($arrDownloads as $element)
+		if(count($arrDownloads))
 		{
-			$objTemplate = new \FrontendTemplate($this->category_template);
-			$objTemplate->setData(((array) $element));
-			$html .= $objTemplate->parse();
+			$arrDownloads[0]->css .= ' first';
+			$arrDownloads[count($arrDownloads) - 1]->css .= ' last';
+
+			foreach($arrDownloads as $element)
+			{
+				$objTemplate = new \FrontendTemplate($this->category_template);
+				$objTemplate->setData(((array) $element));
+				$html .= $objTemplate->parse();
+			}
 		}
 
 		$this->Template->html = $html;
