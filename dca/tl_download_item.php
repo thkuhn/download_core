@@ -5,7 +5,7 @@ $GLOBALS['TL_DCA']['tl_download_item'] = array
 	'config' => array
 	(
 		'dataContainer'               => 'Table',
-		'ptable'                      => 'tl_download_category',
+		'ptable'                      => 'tl_download_structure',
 		'enableVersioning'            => false,
 		'switchToEdit'                => true,
 		'sql' => array
@@ -100,6 +100,7 @@ $GLOBALS['TL_DCA']['tl_download_item'] = array
 		),
 		'pid' => array
 		(
+			'foreignKey'              => 'tl_download_structure.title',
 			'sql'                     => "int(10) NOT NULL default '0'"
 		),
 		'tstamp' => array

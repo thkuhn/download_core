@@ -2,9 +2,14 @@
 
 array_insert($GLOBALS['BE_MOD']['content'], count($GLOBALS['BE_MOD']['content']), array
 (
+//	'download' => array
+//	(
+//		'tables'     => array('tl_download_archiv', 'tl_download_category', 'tl_download_item'),
+//		'icon'       => 'system/themes/default/images/sync.gif'
+//	),
 	'download' => array
 	(
-		'tables'     => array('tl_download_archiv', 'tl_download_category', 'tl_download_item'),
+		'tables'     => array('tl_download_structure', 'tl_download_item'),
 		'icon'       => 'system/themes/default/images/sync.gif'
 	)
 ));
@@ -13,10 +18,11 @@ array_insert($GLOBALS['FE_MOD']['download_core'], 0, array
 (
     'download_archiv'            => 'ModuleDownloadArchiv',
     'download_category'          => 'ModuleDownloadCategory',
-    'download_index'             => 'ModuleDownloadIndex'
+    'download_index'             => 'ModuleDownloadIndex',
+    'download_navigation'        => 'ModuleDownloadNavigation'
 ));
 
-$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('pixelSpreadde\Classes\InsertTags', 'myReplaceInsertTags');
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('CDK\Classes\InsertTags', 'myReplaceInsertTags');
 
 $GLOBALS['TL_HEAD']['PIXELSPREADDE'] = '<!--
     This Contao OpenSource CMS uses modules from pixelSpread.de

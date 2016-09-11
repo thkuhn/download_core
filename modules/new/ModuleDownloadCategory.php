@@ -22,38 +22,6 @@ class ModuleDownloadCategory extends \ModuleDownload
 			return $objTemplate->parse();
 		}
 
-		if(FE_USER_LOGGED_IN)
-		{
-			$this->Import('FrontendUser', 'Member');
-		}
-
-		if(\Input::Get('category'))
-		{
-			$objCategory = \DownloadStructureModel::findByAlias(\Input::Get('category'));
-		}
-		else
-		{
-			$blnStop = true;
-		}
-
-		$objDownloads = \DownloadItemModel::findByPid($objCategory->id);
-		if($objDownloads !== null)
-		{
-			if(!$objDownloads->count())
-			{
-				$blnStop = true;
-			}
-		}
-		else
-		{
-			$blnStop = true;
-		}
-
-		if($blnStop)
-		{
-			return '';
-		}
-
 		return parent::generate();
 	}
 
@@ -69,12 +37,12 @@ class ModuleDownloadCategory extends \ModuleDownload
 
 		if(\Input::Get('category'))
 		{
-			$objCategory = \DownloadStructureModel::findByAlias(\Input::Get('category'));
+			$objCategory = \DownloadCategoryModel::findByAlias(\Input::Get('category'));
+			$objArchiv   = \DownloadArchivModel::findById($objCategory->pid);
 		}
 
 		$arrDownloads = array();
 		$objDownloads = \DownloadItemModel::findByPid($objCategory->id);
-		$objDownloads = $this->Database->prepare("SELECT * FROM tl_download_item WHERE pid=? ORDER BY sorting ASC")->execute($objCategory->id);
 
 		if($objDownloads !== null)
 		{
@@ -95,31 +63,13 @@ class ModuleDownloadCategory extends \ModuleDownload
 				}
 
 				$arrFiles = array();
-				$index = 0;
-				if(is_array(deserialize($objDownload->fileSRC)))
+				foreach(deserialize($objDownload->fileSRC) as $file)
 				{
-					foreach(deserialize($objDownload->fileSRC) as $file)
-					{
-						$objFile = \FilesModel::findByUuid($file);
-						$objFile = new \File($objFile->path, true);
-
-						$arrFiles[] = (object) array
-						(
-							'name'      => $objFile->name,
-							'url'       => \Environment::Get('request') . "?downloadId=" . $objDownload->id . "&fileIndex=" . $index,
-							'index'     => $index++,
-							'filesize'  => $this->getReadableSize($objFile->filesize, 1),
-							'icon'      => \Image::getPath($objFile->icon),
-							'mime'      => $objFile->mime,
-							'extension' => $objFile->extension,
-							'path'      => $objFile->dirname
-						);
-					}
+					$arrFiles[] = \FilesModel::findByUuid($file);
 				}
 
 				$objDownload->fileSRC = $arrFiles;
 				$objDownload->url = \Environment::Get('request') . "?downloadId=" . $objDownload->id;
-				$objDownload->hasAccess = $this->hasAccess($objDownload);
 				$arrDownloads[] = $objDownload;
 			}
 		}
@@ -138,32 +88,5 @@ class ModuleDownloadCategory extends \ModuleDownload
 		}
 
 		$this->Template->html = $html;
-	}
-
-	private function hasAccess($item)
-	{
-		if($item->protected)
-		{
-			if(FE_USER_LOGGED_IN)
-			{
-				$groups = deserialize($item->groups);
-				if(is_array($groups))
-				{
-					foreach($groups as $group)
-					{
-						if(in_array($group, $this->Member->groups))
-						{
-							return true;
-						}
-					}
-				}
-			}
-		}
-		elseif(!$item->protected)
-		{
-			return true;
-		}
-
-		return false;
 	}
 }

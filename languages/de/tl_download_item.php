@@ -6,7 +6,6 @@ $GLOBALS['TL_LANG']['tl_download_item']['image_legend'] = 'Bilder';
 $GLOBALS['TL_LANG']['tl_download_item']['download_legend'] = 'Download';
 $GLOBALS['TL_LANG']['tl_download_item']['published_legend'] = 'Ver&ouml;ffentlichen';
 
-
 $GLOBALS['TL_LANG']['tl_download_item']['title'] = array('Bezeichnung', 'Geben Sie eine Bezeichnung f&uuml;r das Download-Element an.');
 $GLOBALS['TL_LANG']['tl_download_item']['type'] = array('Typ', 'W&auml;hlen Sie bitte den Typen aus.');
 $GLOBALS['TL_LANG']['tl_download_item']['teaser'] = array('Teaser', 'Geben Sie einen Teaser bzw. eine Kurzbeschreibung f&uuml;r das Download-Element ein.');
@@ -16,6 +15,7 @@ $GLOBALS['TL_LANG']['tl_download_item']['groups'] = array('Mitgliedergruppen', '
 $GLOBALS['TL_LANG']['tl_download_item']['addImage'] = array('Bilder hinzuf&uuml;gen', 'M&ouml;chten Sie f&uuml;r das Download-Element ein Bild ausw&auml;hlen?');
 $GLOBALS['TL_LANG']['tl_download_item']['singleSRC'] = array('Vorschaubilder', 'W&auml;hlen Sie bitte Vorschaubilder f&uumlr; das Download-Element.');
 $GLOBALS['TL_LANG']['tl_download_item']['fileSRC'] = array('Dateien', 'W&auml;hlen Sie bitte die Dateien die heruntergeladen werden k&ouml;nnen.');
+
 $GLOBALS['TL_LANG']['tl_download_item']['published'] = array('Ver&ouml;ffentlichen', 'Soll das Download-Element ver&ouml;ffentlicht werden?');
 $GLOBALS['TL_LANG']['tl_download_item']['start'] = array('Anzeigen ab', 'Das Download-Element erst ab diesem Tag auf der Webseite anzeigen.');
 $GLOBALS['TL_LANG']['tl_download_item']['stop'] = array('Anzeigen bis', 'Das Download-Element nur bis zu diesem Tag auf der Webseite anzeigen.');

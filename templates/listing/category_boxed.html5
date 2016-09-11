@@ -1,13 +1,51 @@
-<div class="category_boxed category <?=$this->css; ?>" id="download_<?=$this->id; ?>">
-    <?php if($this->addImage): ?>
-    <div class="download-preview-image">
-	    <a href="<?=$this->url; ?>"><img src="<?=$this->previewImage->path; ?>"></a>
-    </div>
-    <?php endif; ?>
-    <div class="download-meta">
-	<p class="ausgabe"><span class="download-label">Ausgabe:</span> <?=$this->title; ?></p>
-	<?php if($this->teaser): ?>
-	<p class="thema"><span class="download-label">Thema:</span> <?=$this->teaser; ?></p>
+<div class="category_boxed category cmp <?=$this->css; ?>" id="download_<?=$this->id; ?>">
+    <div class="title row">
+	<?php if($this->addImage): ?>
+	<div class="download-preview-image block image">
+	    <div class="overflow">
+		<a href="<?=$this->previewImage->path; ?>" data-lightbox="<?=md5($this->id); ?>" class="cboxElement"><img src="<?=$this->previewImage->path; ?>"></a>
+		<div class="caption" title="Zum Vergr&ouml;&szlig;ern Bild anklicken"><i class="fa fa-search" aria-hidden="true"></i></div>
+	    </div>
+	</div>
 	<?php endif; ?>
+	<div class="download-meta block text">
+	    <h2><?php if($this->hasAccess): ?><a href="<?=$this->url;?>"><?php endif; ?><?=$this->title; ?><?php if($this->hasAccess): ?></a><?php endif; ?></h2>
+	    <p class="download title"><?php if($this->hasAccess): ?><a href="<?=$this->url;?>">Datei herunterladen</a> | <?php endif; ?>Zum Vergr&ouml;&szlig;ern Bild anklicken</p>
+	    <div class="description"><?=$this->text; ?></div>
+
+	    <?php if($this->type == 'single'): ?>
+
+	    <?php endif; ?>
+
+	    <?php if($this->type == 'multi'): ?>
+	    <ul>
+		<?php foreach($this->fileSRC as $file): ?>
+		<li class="download <?php echo $file->extension; ?>">
+		    <?php if($this->hasAccess): ?><a href="<?=$file->url;?>"><?php endif; ?>
+		    <span class="download-image"><img src="<?php echo $file->icon; ?>"></span> <span class="download-filename"><?php echo $file->name; ?></span>
+		    <?php if($this->hasAccess): ?></a><?php endif; ?>
+		    <span class="download-filesize"><?php echo $file->filesize; ?></span>
+		</li>
+		<?php endforeach; ?>
+	    </ul>
+	    <?php endif; ?>
+	</div>
     </div>
 </div>
+
+<!--
+<div class="cmp">
+    <div class="title row">
+	    <div class="block image">
+		<div class="overflow">
+			<?php foreach($item->preview as $image): ?>
+			<div class="slide"<?php if($image->css == ''): ?> style="display: none;"<?php endif; ?>>
+			<a href="<?=$image->path; ?>" title="Zum Vergr&ouml;&szlig;ern Bild anklicken" data-lightbox="<?=md5($item->id); ?>" class="cboxElement"><img src="<?=$image->path; ?>" width="150"></a>
+			</div>
+			<?php endforeach; ?>
+		</div>
+	    </div>
+	    
+	</div>
+</div>
+-->

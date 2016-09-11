@@ -1,6 +1,6 @@
 <?php
 
-namespace pixelSpreadde\Models;
+namespace CDK\Models;
 
 class DownloadCategoryModel extends \Model
 {

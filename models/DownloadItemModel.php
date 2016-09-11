@@ -1,6 +1,6 @@
 <?php
 
-namespace pixelSpreadde\Models;
+namespace CDK\Models;
 
 class DownloadItemModel extends \Model
 {
@@ -25,7 +25,7 @@ class DownloadItemModel extends \Model
 #
 		if (!isset($arrOptions['order']))
 		{
-#			$arrOptions['order'] = \Database::getInstance()->findInSet("$t.alias", $arrAliases);
+			$arrOptions['order'] = "t.sorting ASC";
 		}
 
 		return static::findBy($arrColumns, null, $arrOptions);

@@ -1,6 +1,6 @@
 <?php
 
-namespace pixelSpreadde\Classes;
+namespace CDK\Classes;
 
 abstract class ModuleDownload extends \Module
 {
@@ -8,32 +8,29 @@ abstract class ModuleDownload extends \Module
 	{
 		$objDownload = $this->Database->prepare("SELECT * FROM tl_download_item WHERE id=?")->execute($downloadId);
 		$objDownload->fileSRC = deserialize($objDownload->fileSRC);
-
 		switch($objDownload->type)
 		{
-			case 'single':
-			case 'multi':
-				$objFile = \FilesModel::findByUuid($objDownload->fileSRC[0]);
-				$strTemp = $objFile->path;
-				$strName = standardize($objDownload->title) .  substr($objFile->path, strrpos($objFile->path, "."));
-				break;;
 			case 'zipper':
-				$strTmp = 'system/tmp/'. md5(uniqid(mt_rand(), true));
+				$strTemp = 'system/tmp/'. md5(uniqid(mt_rand(), true));
 				$strName = standardize($objDownload->title) . '.zip';
-				$objArchive = new \ZipWriter($strTmp);
+				$objArchive = new \ZipWriter($strTemp);
 
 				foreach($objDownload->fileSRC as $fileSRC)
 				{
 					$objFile = \FilesModel::findByUuid($fileSRC);
-					$objArchive->addFile($objFile->path);
+					$objArchive->addFile($objFile->path, basename($objFile->path));
 				}
 
 				$objArchive->close();
 				break;;
+			case 'single':
+			case 'multi':
 			default:
+				$objFile = \FilesModel::findByUuid($objDownload->fileSRC[0]);
+				$strTemp = $objFile->path;
+				$strName = standardize($objDownload->title) .  substr($objFile->path, strrpos($objFile->path, "."));
 
 				break;;
-
 		}
 
 		$objFile = new \File($strTemp, true);
