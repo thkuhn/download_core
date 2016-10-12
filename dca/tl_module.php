@@ -125,7 +125,7 @@ class tl_module_download extends Backend
 
 	public function getCategory()
 	{
-		$objModule = \ModuleModel::findById(\Input::Get('id'));
+		$objModule = \ModuleModel::findById(\Input::get('id'));
 
 		if($objModule->download_archiv) {
 			$objData = $this->Database->prepare("SELECT * FROM tl_download_category WHERE pid=?")->execute($objModule->download_archiv);

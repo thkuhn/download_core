@@ -2,11 +2,6 @@
 
 array_insert($GLOBALS['BE_MOD']['content'], count($GLOBALS['BE_MOD']['content']), array
 (
-//	'download' => array
-//	(
-//		'tables'     => array('tl_download_archiv', 'tl_download_category', 'tl_download_item'),
-//		'icon'       => 'system/themes/default/images/sync.gif'
-//	),
 	'download' => array
 	(
 		'tables'     => array('tl_download_structure', 'tl_download_item'),
@@ -16,10 +11,15 @@ array_insert($GLOBALS['BE_MOD']['content'], count($GLOBALS['BE_MOD']['content'])
 
 array_insert($GLOBALS['FE_MOD']['download_core'], 0, array
 (
-    'download_archiv'            => 'ModuleDownloadArchiv',
-    'download_category'          => 'ModuleDownloadCategory',
-    'download_index'             => 'ModuleDownloadIndex',
-    'download_navigation'        => 'ModuleDownloadNavigation'
+	'download_archiv'            => 'ModuleDownloadArchiv',
+	'download_category'          => 'ModuleDownloadCategory',
+	'download_index'             => 'ModuleDownloadIndex',
+	'download_navigation'        => 'ModuleDownloadNavigation'
+));
+
+array_insert($GLOBALS['TL_CTE']['files'], count($GLOBALS['TL_CTE']['files']), array
+(
+	'download_archive' => 'ContentDownloadArchive'
 ));
 
 $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('CDK\Classes\InsertTags', 'myReplaceInsertTags');

@@ -2,13 +2,13 @@
 
 namespace pixelSpreadde\Frontend;
 
-class ModuleDownloadElement extends \Module 
+class ModuleDownloadElement extends \Module
 {
 	protected $strTemplate = 'mod_download_element';
 
-	public function generate() 
+	public function generate()
 	{
-		if (TL_MODE == 'BE') 
+		if (TL_MODE == 'BE')
 		{
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
@@ -28,9 +28,9 @@ class ModuleDownloadElement extends \Module
 	{
 #		$strTmp = md5(uniqid(mt_rand(), true));
 #		$objArchive = new \ZipWriter('system/tmp/'. $strTmp);
-		if(\Input::Get('download') && FE_USER_LOGGED_IN)
+		if(\Input::get('download') && FE_USER_LOGGED_IN)
 		{
-			$objDownload = $this->Database->prepare("SELECT * FROM tl_download_item WHERE id=?")->execute(\Input::Get('download'));
+			$objDownload = $this->Database->prepare("SELECT * FROM tl_download_item WHERE id=?")->execute(\Input::get('download'));
 			$objFile = \FilesModel::findByUuid($objDownload->fileSRC);
 
 			$this->sendFileToBrowser($objFile->path);
@@ -39,7 +39,7 @@ class ModuleDownloadElement extends \Module
 		$objPage = \PageModel::findById($GLOBALS['objPage']->id);
 		$strUrl = $this->generateFrontendUrl($objPage->row(), '/download/%s');
 
-		$objCategory = $this->Database->prepare("SELECT * FROM tl_download_category WHERE alias=?")->execute(\Input::Get('category'));
+		$objCategory = $this->Database->prepare("SELECT * FROM tl_download_category WHERE alias=?")->execute(\Input::get('category'));
 		$objArchiv   = $this->Database->prepare("SELECT * FROM tl_download_archiv WHERE id=?")->execute($objCategory->pid);
 
 		$objData = $this->Database->prepare("SELECT * FROM tl_download_item WHERE pid=? && published=1 ORDER BY sorting ASC")->execute($objCategory->id);

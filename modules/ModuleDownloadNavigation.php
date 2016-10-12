@@ -29,7 +29,7 @@ class ModuleDownloadNavigation extends \Module
 			$this->Import('FrontendUser', 'Member');
 		}
 
-		$this->generateTrail(\Input::Get('category'));
+		$this->generateTrail(\Input::get('category'));
 
 		$pid = 0;
 
@@ -37,9 +37,9 @@ class ModuleDownloadNavigation extends \Module
 		{
 			$pid = $this->trail[$this->download_levelOffset - 1];
 		}
-		elseif(\Input::Get('category'))
+		elseif(\Input::get('category'))
 		{
-			$pid = \DownloadStructureModel::findByAlias(\Input::Get('category'))->id;
+			$pid = \DownloadStructureModel::findByAlias(\Input::get('category'))->id;
 		}
 		elseif($this->download_referenceCategory)
 		{
@@ -200,7 +200,7 @@ class ModuleDownloadNavigation extends \Module
 					break;;
 			}
 
-			if(!$blnHook)
+			if(!$blnHook && $pageId)
 			{
 				$objPage = \PageModel::findById($pageId);
 				$item->href = \Controller::generateFrontendUrl($objPage->row(), $pageAdd);

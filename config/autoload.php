@@ -11,6 +11,8 @@ ClassLoader::addNamespaces(array
  
 ClassLoader::addClasses(array
 (
+	'CDK\Elements\ContentDownloadArchive'   => 'system/modules/download_core/elements/ContentDownloadArchive.php',
+
 	'CDK\Models\DownloadArchivModel'        => 'system/modules/download_core/models/DownloadArchivModel.php',
 	'CDK\Models\DownloadCategoryModel'      => 'system/modules/download_core/models/DownloadCategoryModel.php',
 	'CDK\Models\DownloadItemModel'          => 'system/modules/download_core/models/DownloadItemModel.php',

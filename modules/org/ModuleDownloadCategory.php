@@ -2,13 +2,13 @@
 
 namespace CDK\Frontend;
 
-class ModuleDownloadCategory extends \Module 
+class ModuleDownloadCategory extends \Module
 {
 	protected $strTemplate = 'mod_download_category';
 
-	public function generate() 
+	public function generate()
 	{
-		if (TL_MODE == 'BE') 
+		if (TL_MODE == 'BE')
 		{
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
@@ -31,9 +31,9 @@ class ModuleDownloadCategory extends \Module
 
 	protected function compile()
 	{
-		if(\Input::Get('download'))
+		if(\Input::get('download'))
 		{
-			$objDownload = $this->Database->prepare("SELECT * FROM tl_download_item WHERE id=?")->execute(\Input::Get('download'));
+			$objDownload = $this->Database->prepare("SELECT * FROM tl_download_item WHERE id=?")->execute(\Input::get('download'));
 
 			if($this->hasAccess($objDownload))
 			{
@@ -54,7 +54,7 @@ class ModuleDownloadCategory extends \Module
 		$objPage = \PageModel::findById($GLOBALS['objPage']->id);
 		$strUrl = $this->generateFrontendUrl($objPage->row(), '/download/%s');
 
-		$objCategory = $this->Database->prepare("SELECT * FROM tl_download_structure WHERE alias=?")->execute(\Input::Get('category'));
+		$objCategory = $this->Database->prepare("SELECT * FROM tl_download_structure WHERE alias=?")->execute(\Input::get('category'));
 		$objArchiv   = $this->Database->prepare("SELECT * FROM tl_download_archiv WHERE id=?")->execute($objCategory->pid);
 
 		$objData = $this->Database->prepare("SELECT * FROM tl_download_item WHERE pid=? && published=1 ORDER BY sorting ASC")->execute($objCategory->id);

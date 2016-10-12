@@ -7,9 +7,9 @@ class ModuleDownloadCategory extends \ModuleDownload
 {
 	protected $strTemplate = 'mod_download_category';
 
-	public function generate() 
+	public function generate()
 	{
-		if (TL_MODE == 'BE') 
+		if (TL_MODE == 'BE')
 		{
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
@@ -27,17 +27,17 @@ class ModuleDownloadCategory extends \ModuleDownload
 
 	protected function compile()
 	{
-		if(\Input::Get('downloadId') && FE_USER_LOGGED_IN)
+		if(\Input::get('downloadId') && FE_USER_LOGGED_IN)
 		{
-			$this->sendDownloadToBrowser(\Input::Get('downloadId'));
+			$this->sendDownloadToBrowser(\Input::get('downloadId'));
 		}
 
 		$objPage = \PageModel::findById($GLOBALS['objPage']->id);
 		$strUrl = \Controller::generateFrontendUrl($objPage->row(), '/element/%s');
 
-		if(\Input::Get('category'))
+		if(\Input::get('category'))
 		{
-			$objCategory = \DownloadCategoryModel::findByAlias(\Input::Get('category'));
+			$objCategory = \DownloadCategoryModel::findByAlias(\Input::get('category'));
 			$objArchiv   = \DownloadArchivModel::findById($objCategory->pid);
 		}
 
@@ -69,7 +69,7 @@ class ModuleDownloadCategory extends \ModuleDownload
 				}
 
 				$objDownload->fileSRC = $arrFiles;
-				$objDownload->url = \Environment::Get('request') . "?downloadId=" . $objDownload->id;
+				$objDownload->url = \Environment::get('request') . "?downloadId=" . $objDownload->id;
 				$arrDownloads[] = $objDownload;
 			}
 		}
