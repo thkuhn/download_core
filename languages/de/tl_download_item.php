@@ -21,5 +21,5 @@ $GLOBALS['TL_LANG']['tl_download_item']['start'] = array('Anzeigen ab', 'Das Dow
 $GLOBALS['TL_LANG']['tl_download_item']['stop'] = array('Anzeigen bis', 'Das Download-Element nur bis zu diesem Tag auf der Webseite anzeigen.');
 
 $GLOBALS['TL_LANG']['tl_download_item']['type_option']['single'] = 'eine einzelne Datei';
-$GLOBALS['TL_LANG']['tl_download_item']['type_option']['multi'] = 'mehere Dateien';
-$GLOBALS['TL_LANG']['tl_download_item']['type_option']['zipper'] = 'mehere Dateien gezipped';
+$GLOBALS['TL_LANG']['tl_download_item']['type_option']['multi'] = 'mehrere Dateien';
+$GLOBALS['TL_LANG']['tl_download_item']['type_option']['zipper'] = 'mehrere Dateien, als ZIP-Archiv';
