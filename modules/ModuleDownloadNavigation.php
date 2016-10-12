@@ -173,17 +173,17 @@ class ModuleDownloadNavigation extends \Module
 				case "regular":
 					$pageId  = $this->download_jumpTo;
 					$pageAdd = '/category/' . $item->alias;
-					break;;
+					break;
 				case "redirect":
 					$objRedirect = \DownloadStructureModel::findById($item->categoryJump);
 
 					$pageId = $this->download_jumpTo;
 					$pageAdd = '/category/'. $objRedirect->alias;
-					break;;
+					break;
 				case "page":
 					$pageId  = $item->jumpTo;
 					$pageAdd = '';
-					break;;
+					break;
 				default:
 
 					if (isset($GLOBALS['TL_HOOKS']['modifyOwnCategoryTyp']) && is_array($GLOBALS['TL_HOOKS']['modifyOwnCategoryTyp']))
@@ -197,7 +197,7 @@ class ModuleDownloadNavigation extends \Module
 
 					$blnHook = true;
 
-					break;;
+					break;
 			}
 
 			if(!$blnHook && $pageId)

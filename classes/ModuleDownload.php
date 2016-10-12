@@ -22,7 +22,7 @@ abstract class ModuleDownload extends \Module
 				}
 
 				$objArchive->close();
-				break;;
+				break;
 			case 'single':
 			case 'multi':
 			default:
@@ -30,7 +30,7 @@ abstract class ModuleDownload extends \Module
 				$strTemp = $objFile->path;
 				$strName = standardize($objDownload->title) .  substr($objFile->path, strrpos($objFile->path, "."));
 
-				break;;
+				break;
 		}
 
 		$objFile = new \File($strTemp, true);
