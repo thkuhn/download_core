@@ -10,7 +10,7 @@
 	<?php endif; ?>
 	<div class="download-meta block text">
 	    <h2><?php if ($this->hasAccess): ?><a href="<?= $this->url;?>"><?php endif; ?><?= $this->title; ?><?php if ($this->hasAccess): ?></a><?php endif; ?></h2>
-	    <p class="download title"><?php if ($this->hasAccess): ?><a href="<?= $this->url;?>">Datei herunterladen</a> | <?php endif; ?>Zum Vergr&ouml;&szlig;ern Bild anklicken</p>
+	    <p class="download title"><?php if ($this->hasAccess): ?><a href="<?= $this->url;?>">Datei herunterladen</a> | <?php endif; ?>Zum Vergrößern Bild anklicken</p>
 	    <div class="description"><?= $this->text; ?></div>
 
 	    <?php if ($this->type == 'single'): ?>

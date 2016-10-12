@@ -9,19 +9,19 @@
 		<div class="overflow">
 			<?php foreach($item->preview as $image): ?>
 			<div class="slide"<?php if($image->css == ''): ?> style="display: none;"<?php endif; ?>>
-			<a href="<?=$image->path; ?>" title="Zum Vergr&ouml;&szlig;ern Bild anklicken" data-lightbox="<?=md5($item->id); ?>" class="cboxElement"><img src="<?=$image->path; ?>" width="150"></a>
+			<a href="<?=$image->path; ?>" title="Zum Vergrößern Bild anklicken" data-lightbox="<?=md5($item->id); ?>" class="cboxElement"><img src="<?=$image->path; ?>" width="150"></a>
 			</div>
 			<?php endforeach; ?>
-			<div class="caption" title="Zum Vergr&ouml;&szlig;ern Bild anklicken"><i class="fa fa-search" aria-hidden="true"></i></div>		
+			<div class="caption" title="Zum Vergrößern Bild anklicken"><i class="fa fa-search" aria-hidden="true"></i></div>
 		</div>
 	    </div>
-	    
+
 	    <div class="block text">
-		<h2><?php if($item->url): ?><a href="<?=$item->url;?>"><?php endif; ?><?=$item->title; ?><?php if($item->url): ?></a><?php endif; ?></h2>		
-		<p class="download title"><?php if($item->url): ?><a href="<?=$item->url;?>">Datei herunterladen</a> | <?php endif; ?>Zum Vergr&ouml;&szlig;ern Bild anklicken</p>
+		<h2><?php if($item->url): ?><a href="<?=$item->url;?>"><?php endif; ?><?=$item->title; ?><?php if($item->url): ?></a><?php endif; ?></h2>
+		<p class="download title"><?php if($item->url): ?><a href="<?=$item->url;?>">Datei herunterladen</a> | <?php endif; ?>Zum Vergrößern Bild anklicken</p>
 		<div class="description"><?=$item->text; ?></div>
 	    </div>
-	    
+
 	</div>
 </div>
 <?php endforeach; ?>

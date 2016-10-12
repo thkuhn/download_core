@@ -9,7 +9,7 @@
 	<div class="item">
 	    <?php if($item->addImage): ?>
 	    <div class="image">
-		<?php if($item->url): ?><a href="<?=$item->url; ?>"><?php endif; ?><img src="<?=$item->archivIcon; ?>" title="Derzeit <?=$item->count; ?> Dateien verf&uuml;gbar"><?php if($item->url): ?></a><?php endif; ?>
+		<?php if($item->url): ?><a href="<?=$item->url; ?>"><?php endif; ?><img src="<?=$item->archivIcon; ?>" title="Derzeit <?=$item->count; ?> Dateien verfügbar"><?php if($item->url): ?></a><?php endif; ?>
 	    </div>
 	    <?php endif; ?>
 	    <div class="text">
