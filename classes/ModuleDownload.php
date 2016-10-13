@@ -26,7 +26,14 @@ abstract class ModuleDownload extends \Module
 			case 'single':
 			case 'multi':
 			default:
-				$objFile = \FilesModel::findByUuid($objDownload->fileSRC[0]);
+				$intFileIndex = 0;
+
+				if (\Input::get('fileIndex') > 0)
+				{
+					$intFileIndex = (int) \Input::get('fileIndex');
+				}
+
+				$objFile = \FilesModel::findByUuid($objDownload->fileSRC[$intFileIndex]);
 				$strTemp = $objFile->path;
 				$strName = standardize($objDownload->title) .  substr($objFile->path, strrpos($objFile->path, "."));
 
