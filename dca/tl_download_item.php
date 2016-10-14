@@ -48,34 +48,34 @@ $GLOBALS['TL_DCA']['tl_download_item'] = array
 		(
 			'edit' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_news_archive']['edit'],
+				'label'               => &$GLOBALS['TL_LANG']['tl_download_item']['edit'],
 				'href'                => 'act=edit',
 				'icon'                => 'edit.gif',
 			),
 			'copy' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_content']['copy'],
+				'label'               => &$GLOBALS['TL_LANG']['tl_download_item']['copy'],
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.gif',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"'
 			),
 			'cut' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_mev_books_elements']['cut'],
+				'label'               => &$GLOBALS['TL_LANG']['tl_download_item']['cut'],
 				'href'                => 'act=paste&amp;mode=cut',
 				'icon'                => 'cut.gif',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"'
 			),
 			'delete' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_mev_books_elements']['delete'],
+				'label'               => &$GLOBALS['TL_LANG']['tl_download_item']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.gif',
 				'attributes'          => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"'
 			),
 			'show' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_mev_books_elements']['show'],
+				'label'               => &$GLOBALS['TL_LANG']['tl_download_item']['show'],
 				'href'                => 'act=show',
 				'icon'                => 'show.gif'
 			)
@@ -205,7 +205,7 @@ $GLOBALS['TL_DCA']['tl_download_item'] = array
 		),
 		'orderSRC' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['orderSRC'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_download_item']['orderSRC'],
 			'sql'                     => "blob NULL"
 		),
 		'fileURL' => array

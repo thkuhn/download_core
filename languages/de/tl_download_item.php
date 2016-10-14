@@ -25,3 +25,12 @@ $GLOBALS['TL_LANG']['tl_download_item']['type_option']['single'] = 'eine einzeln
 $GLOBALS['TL_LANG']['tl_download_item']['type_option']['multi'] = 'mehrere Dateien';
 $GLOBALS['TL_LANG']['tl_download_item']['type_option']['zipper'] = 'mehrere Dateien, als ZIP-Archiv';
 $GLOBALS['TL_LANG']['tl_download_item']['type_option']['external'] = 'externe Datei (Url)';
+
+$GLOBALS['TL_LANG']['tl_download_item']['new'] = array('Neuer Download', 'Einen neuen Download anlegen');
+$GLOBALS['TL_LANG']['tl_download_item']['pastenew'] = array('Neuen Download oben erstellen', 'Neuen Download nach Download ID %s erstellen');
+$GLOBALS['TL_LANG']['tl_download_item']['show'] = array('Downloaddetails', 'Details des Downloads ID %s anzeigen');
+$GLOBALS['TL_LANG']['tl_download_item']['edit'] = array('Download bearbeiten', 'Download ID %s bearbeiten');
+$GLOBALS['TL_LANG']['tl_download_item']['editheader'] = array('Archiv-Einstellungen bearbeiten', 'Archiv-Einstellungen bearbeiten');
+$GLOBALS['TL_LANG']['tl_download_item']['copy'] = array('Download duplizieren', 'Download ID %s duplizieren');
+$GLOBALS['TL_LANG']['tl_download_item']['cut'] = array('Download verschieben', 'Download ID %s verschieben');
+$GLOBALS['TL_LANG']['tl_download_item']['delete'] = array('Download löschen', 'Download ID %s löschen');

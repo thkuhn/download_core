@@ -68,11 +68,18 @@ $GLOBALS['TL_DCA']['tl_download_structure'] = array
 		),
 		'operations' => array
 		(
+			'downloads' => array
+			(
+				'label'               => &$GLOBALS['TL_LANG']['tl_download_structure']['downloads'],
+				'href'                => 'table=tl_download_item',
+				'icon'                => 'edit.gif',
+//				'button_callback'     => array('tl_download_structure', 'editArticles')
+			),
 			'edit' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_download_structure']['edit'],
 				'href'                => 'act=edit',
-				'icon'                => 'edit.gif',
+				'icon'                => 'header.gif',
 				'button_callback'     => array('tl_download_structure', 'editPage')
 			),
 			'copy' => array
@@ -120,13 +127,6 @@ $GLOBALS['TL_DCA']['tl_download_structure'] = array
 				'href'                => 'act=show',
 				'icon'                => 'show.gif'
 			),
-			'downloads' => array
-			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_download_structure']['downloads'],
-				'href'                => 'table=tl_download_item',
-				'icon'                => 'sync.gif',
-//				'button_callback'     => array('tl_download_structure', 'editArticles')
-			)
 		)
 	),
 	'select' => array
@@ -141,7 +141,7 @@ $GLOBALS['TL_DCA']['tl_download_structure'] = array
 		'__selector__'                => array('type', 'addImage', 'protected', 'published'),
 		'default'                     => '{title_legend},title,type,alias,cssClass',
 		'regular'                     => '{title_legend},title,type,alias,cssClass;{image_legend},addImage;{protected_legend},protected;{published_legend},published',
-		'redirect'                    => '{title_legend},title,type,alias,cssClass;{image_legend},addImage;{protected_legend},protected;{redirect_legend},redirect;{published_legend},published',
+		'redirect'                    => '{title_legend},title,type,alias,cssClass;{image_legend},addImage;{protected_legend},protected;{redirect_legend},redirectURL;{published_legend},published',
 	),
 	'subpalettes' => array
 	(
@@ -198,8 +198,8 @@ $GLOBALS['TL_DCA']['tl_download_structure'] = array
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('regular', 'redirect'),
-			'eval'                    => array('helpwizard'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
-//			'reference'               => &$GLOBALS['TL_LANG']['PTY'],
+			'eval'                    => array('helpwizard'=>false, 'mandatory' => true, 'includeBlankOption' => true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
+			'reference'               => &$GLOBALS['TL_LANG']['tl_download_structure']['type_option'],
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'cssClass' => array
@@ -248,6 +248,15 @@ $GLOBALS['TL_DCA']['tl_download_structure'] = array
 			'eval'                    => array('mandatory'=>true,'fieldType'=>'radio', 'files'=>true, 'filesOnly'=>true,'extensions'=>'jpg,png,gif'),
 			'sql'                     => "binary(16) NULL"
 		),
+		'redirectURL' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_download_structure']['redirectURL'],
+			'exclude'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'url', 'tl_class'=>'long'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
+
 		'published' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_download_structure']['published'],
