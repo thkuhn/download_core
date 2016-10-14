@@ -1,7 +1,7 @@
-<div class="category_boxed category cols-xs-12 cmp <?= $this->css; ?>" id="download_<?= $this->id; ?>">
-    <div class="title row">
+<div class="category_boxed category cols-xs-12 col-sm-4 cmp <?= $this->css; ?>" id="download_<?= $this->id; ?>">
+    <div class="title">
 	<?php if ($this->addImage): ?>
-	<div class="download-preview-image block image">
+	<div class="download-preview-image image">
 	    <div class="overflow">
 		<a href="<?= $this->previewImage->path; ?>" data-lightbox="<?= md5($this->id); ?>" class="cboxElement"><img src="<?= $this->previewImage->path; ?>"></a>
 		<div class="caption" title="Zum Vergrößern Bild anklicken"><i class="fa fa-search" aria-hidden="true"></i></div>
@@ -9,15 +9,21 @@
 	</div>
 	<?php endif; ?>
 	<div class="download-meta block text">
-	    <h2><?php if ($this->hasAccess): ?><a href="<?= $this->url;?>"><?php endif; ?><?= $this->title; ?><?php if ($this->hasAccess): ?></a><?php endif; ?></h2>
-	    <p class="download title"><?php if ($this->hasAccess): ?><a href="<?= $this->url;?>">Datei herunterladen</a> | <?php endif; ?>Zum Vergrößern Bild anklicken</p>
-	    <div class="description"><?= $this->text; ?></div>
+	    <h2 class="pull-left">
+			<?php if ($this->hasAccess): ?>
+			<a href="<?= $this->url;?>" title="Datei downloaden">
+			<?php endif; ?>
 
-	    <?php if ($this->type == 'single'): ?>
+			<?= $this->title; ?><?php if ($this->hasAccess): ?></a><?php endif; ?></h2>
 
+		<p class="download title pull-right">
+		<?php if ($this->hasAccess): ?>
+			<a href="<?= $this->url;?>"><img src="files/theme/sysINSIGHT/img/icn_download.png" title="Datei downloaden"></a>&nbsp;&nbsp;<a href="#"><img src="files/theme/sysINSIGHT/img/icn_refer.png" title="Download weiterempfehlen"></a><?php endif; ?></p>
 
-	    <?php elseif ($this->type == 'multi'): ?>
-	    <ul>
+		<div class="description pull-left"><?= $this->text; ?></div>
+
+	    <?php if ($this->type == 'multi'): ?>
+	    <ul class="multi-files pull-left">
 			<?php foreach($this->fileSRC as $file): ?>
 			<li class="download <?= $file->extension; ?>">
 				<?php if ($this->hasAccess): ?>
@@ -27,7 +33,7 @@
 				<?php else: ?>
 					<span class="download-image"><img src="<?= $file->icon; ?>"></span> <span class="download-filename"><?= $file->name; ?></span>
 				<?php endif; ?>
-				<span class="download-filesize"><?= $file->filesize; ?></span>
+				<span class="download-filesize">(<?= $file->filesize; ?>)</span>
 			</li>
 			<?php endforeach; ?>
 	    </ul>
