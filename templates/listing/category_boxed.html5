@@ -10,15 +10,16 @@
 	<?php endif; ?>
 	<div class="download-meta block text">
 	    <h2 class="pull-left">
-			<?php if ($this->hasAccess): ?>
-			<a href="<?= $this->url;?>" title="Datei downloaden">
-			<?php endif; ?>
-
-			<?= $this->title; ?><?php if ($this->hasAccess): ?></a><?php endif; ?></h2>
+		<?php if ($this->hasAccess && !in_array($this->type, array('multi'))): ?>
+			<a href="<?= $this->url;?>" title="Datei downloaden"<?= ($this->type == 'external' ? ' target="_new"' : '') ?>><?= $this->title; ?></a>
+		<?php else: ?>
+			<?= $this->title; ?>
+		<?php endif; ?></h2>
 
 		<p class="download title pull-right">
 		<?php if ($this->hasAccess): ?>
-			<a href="<?= $this->url;?>"><img src="files/theme/sysINSIGHT/img/icn_download.png" title="Datei downloaden"></a>&nbsp;&nbsp;<a href="#"><img src="files/theme/sysINSIGHT/img/icn_refer.png" title="Download weiterempfehlen"></a><?php endif; ?></p>
+			<a href="<?= $this->url;?>"<?= ($this->type == 'external' ? ' target="_new"' : '') ?>><img src="files/theme/sysINSIGHT/img/icn_download.png" title="Datei downloaden"></a>&nbsp;&nbsp;<a href="#"><img src="files/theme/sysINSIGHT/img/icn_refer.png" title="Download weiterempfehlen"></a>
+		<?php endif; ?></p>
 
 		<div class="description pull-left"><?= $this->text; ?></div>
 
