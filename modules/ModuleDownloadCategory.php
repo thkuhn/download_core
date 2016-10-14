@@ -1,9 +1,10 @@
 <?php
 
 namespace CDK\Frontend;
-use CDK\Models, CDK\Classes;
 
-class ModuleDownloadCategory extends \ModuleDownload
+use CDK\Classes\ModuleDownload;
+
+class ModuleDownloadCategory extends ModuleDownload
 {
 	protected $strTemplate = 'mod_download_category';
 
