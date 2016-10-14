@@ -84,7 +84,11 @@ $GLOBALS['TL_DCA']['tl_download_item'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('type', 'addImage', 'protected', 'published'),
-		'default'                     => '{title_legend},title,type,teaser,text;{protected_legend},protected;{image_legend},addImage;{download_legend},fileSRC;{published_legend},published',
+		'default'                     => '{title_legend},title,type,teaser,text;{protected_legend},protected;{image_legend},addImage;{published_legend},published',
+		'single'                      => '{title_legend},title,type,teaser,text;{protected_legend},protected;{image_legend},addImage;{download_legend},fileSRC;{published_legend},published',
+		'multi'                       => '{title_legend},title,type,teaser,text;{protected_legend},protected;{image_legend},addImage;{download_legend},fileSRC;{published_legend},published',
+		'zipper'                      => '{title_legend},title,type,teaser,text;{protected_legend},protected;{image_legend},addImage;{download_legend},fileSRC;{published_legend},published',
+		'external'                    => '{title_legend},title,type,teaser,text;{protected_legend},protected;{image_legend},addImage;{download_legend},fileURL;{published_legend},published',
 	),
 	'subpalettes' => array
 	(
@@ -117,16 +121,17 @@ $GLOBALS['TL_DCA']['tl_download_item'] = array
 			'inputType'               => 'text',
 			'search'                  => true,
 			'eval'                    => array('mandatory'=>false, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''" 
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'type' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_download_item']['type'],
 			'inputType'               => 'select',
-			'search'                  => true,
-			'options'                 => array('single', 'multi', 'zipper'),
+			'search'                  => false,
+			'filter'                  => true,
+			'options'                 => array('single', 'multi', 'zipper', 'external'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_download_item']['type_option'],
-			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50', 'submitOnChange'=>true),
+			'eval'                    => array('mandatory'=>true, 'includeBlankOption' => true, 'tl_class'=>'w50', 'submitOnChange'=>true),
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'teaser' => array
@@ -135,7 +140,7 @@ $GLOBALS['TL_DCA']['tl_download_item'] = array
 			'inputType'               => 'textarea',
 			'search'                  => true,
 			'eval'                    => array('mandatory'=>false),
-			'sql'                     => "text NOT NULL" 
+			'sql'                     => "text NOT NULL"
 		),
 		'text' => array
 		(
@@ -143,7 +148,7 @@ $GLOBALS['TL_DCA']['tl_download_item'] = array
 			'inputType'               => 'textarea',
 			'search'                  => true,
 			'eval'                    => array('mandatory'=>false),
-			'sql'                     => "text NOT NULL" 
+			'sql'                     => "text NOT NULL"
 		),
 		'protected' => array
 		(
@@ -182,17 +187,12 @@ $GLOBALS['TL_DCA']['tl_download_item'] = array
 			'inputType'               => 'fileTree',
 			'exclude'                 => true,
 			'search'                  => false,
-			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'orderField'=>'orderSRC', 'files'=>true, 'mandatory'=>true),
+			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'files'=>true, 'mandatory'=>true),
 			'sql'                     => "blob NULL",
 			'load_callback' => array
 			(
 				array('tl_download_item', 'setMultiSrcFlags')
 			)
-		),
-		'orderSRC' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['orderSRC'],
-			'sql'                     => "blob NULL"
 		),
 		'fileSRC' => array
 		(
@@ -200,9 +200,23 @@ $GLOBALS['TL_DCA']['tl_download_item'] = array
 			'inputType'               => 'fileTree',
 			'exclude'                 => true,
 			'search'                  => false,
-			'eval'                    => array('mandatory'=>true, 'multiple'=>true, 'fieldType'=>'checkbox', 'files'=>true, 'filesOnly'=>true),
+			'eval'                    => array('mandatory'=>true, 'multiple'=>true, 'fieldType'=>'checkbox', 'orderField'=>'orderSRC', 'files'=>true, 'filesOnly'=>true),
 			'sql'                     => "blob NULL"
 		),
+		'orderSRC' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['orderSRC'],
+			'sql'                     => "blob NULL"
+		),
+		'fileURL' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_download_item']['fileURL'],
+			'exclude'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'url', 'tl_class'=>'long'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
+
 		'published' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_download_item']['published'],
@@ -232,14 +246,14 @@ $GLOBALS['TL_DCA']['tl_download_item'] = array
 	)
 );
 
-class tl_download_item extends Backend 
+class tl_download_item extends Backend
 {
-	public function __construct() 
+	public function __construct()
 	{
 		parent::__construct();
 	}
 
-	public function listItems($arrRow) 
+	public function listItems($arrRow)
 	{
 		return $arrRow['title'];
 	}

@@ -15,6 +15,7 @@ $GLOBALS['TL_LANG']['tl_download_item']['groups'] = array('Mitgliedergruppen', '
 $GLOBALS['TL_LANG']['tl_download_item']['addImage'] = array('Bilder hinzufügen', 'Möchten Sie für das Download-Element ein Bild auswählen?');
 $GLOBALS['TL_LANG']['tl_download_item']['singleSRC'] = array('Vorschaubilder', 'Wählen Sie bitte Vorschaubilder f&uumlr; das Download-Element.');
 $GLOBALS['TL_LANG']['tl_download_item']['fileSRC'] = array('Dateien', 'Wählen Sie bitte die Dateien die heruntergeladen werden können.');
+$GLOBALS['TL_LANG']['tl_download_item']['fileURL'] = array('Datei URL', 'Bitte geben Sie die URL der externen Datei ein.');
 
 $GLOBALS['TL_LANG']['tl_download_item']['published'] = array('Veröffentlichen', 'Soll das Download-Element veröffentlicht werden?');
 $GLOBALS['TL_LANG']['tl_download_item']['start'] = array('Anzeigen ab', 'Das Download-Element erst ab diesem Tag auf der Webseite anzeigen.');
@@ -23,3 +24,4 @@ $GLOBALS['TL_LANG']['tl_download_item']['stop'] = array('Anzeigen bis', 'Das Dow
 $GLOBALS['TL_LANG']['tl_download_item']['type_option']['single'] = 'eine einzelne Datei';
 $GLOBALS['TL_LANG']['tl_download_item']['type_option']['multi'] = 'mehrere Dateien';
 $GLOBALS['TL_LANG']['tl_download_item']['type_option']['zipper'] = 'mehrere Dateien, als ZIP-Archiv';
+$GLOBALS['TL_LANG']['tl_download_item']['type_option']['external'] = 'externe Datei (Url)';

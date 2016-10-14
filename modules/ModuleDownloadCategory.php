@@ -60,21 +60,27 @@ class ModuleDownloadCategory extends ModuleDownload
 
 	protected function compile()
 	{
+
 		if(\Input::get('downloadId') && FE_USER_LOGGED_IN)
 		{
 			$this->sendDownloadToBrowser(\Input::get('downloadId'));
 		}
 
-		$objPage = \PageModel::findById($GLOBALS['objPage']->id);
-		$strUrl = \Controller::generateFrontendUrl($objPage->row(), '/element/%s');
+		$strBuffer = '';
 
 		if(\Input::get('category'))
 		{
 			$objCategory = \DownloadStructureModel::findByAlias(\Input::get('category'));
 		}
+		else
+		{
+			$this->Template->html = $strBuffer;
+			return ;
+		}
+
+		$strUrl = \Environment::get('request');
 
 		$arrDownloads = array();
-		$objDownloads = \DownloadItemModel::findByPid($objCategory->id);
 		$objDownloads = $this->Database->prepare("SELECT * FROM tl_download_item WHERE pid=? ORDER BY sorting ASC")->execute($objCategory->id);
 
 		if($objDownloads !== null)
@@ -97,35 +103,77 @@ class ModuleDownloadCategory extends ModuleDownload
 
 				$arrFiles = array();
 				$index = 0;
-				if(is_array(deserialize($objDownload->fileSRC)))
-				{
-					foreach(deserialize($objDownload->fileSRC) as $file)
-					{
-						$objFile = \FilesModel::findByUuid($file);
-						$objFile = new \File($objFile->path, true);
 
-						$arrFiles[] = (object) array
-						(
-							'name'      => $objFile->name,
-							'url'       => \Environment::get('request') . "?downloadId=" . $objDownload->id . "&fileIndex=" . $index,
-							'index'     => $index++,
-							'filesize'  => $this->getReadableSize($objFile->filesize, 1),
-							'icon'      => \Image::getPath($objFile->icon),
-							'mime'      => $objFile->mime,
-							'extension' => $objFile->extension,
-							'path'      => $objFile->dirname
-						);
-					}
+				switch ($objDownload->type)
+				{
+					case 'external':
+						if (!empty($objDownload->fileURL))
+						{
+
+							$strExtension = substr($objDownload->fileURL, strrpos($objDownload->fileURL, '.'));
+							$arrMime = array('application/octet-stream', 'iconPLAIN.gif');
+
+							if (isset($GLOBALS['TL_MIME'][$strExtension]))
+							{
+								$arrMime = $GLOBALS['TL_MIME'][$strExtension];
+							}
+
+							$arrFiles[] = (object) array
+							(
+								'name'      => basename($objDownload->fileURL),
+								'url'       => $objDownload->fileURL,
+								'index'     => $index++,
+								'filesize'  => null,
+								'icon'      => \Image::getPath($arrMime[1]),
+								'mime'      => $arrMime[0],
+								'extension' => $strExtension,
+								'path'      => null
+							);
+						}
+
+						$objDownload->fileSRC = $arrFiles;
+						$objDownload->url = $objDownload->fileURL;
+
+						break;
+
+					case 'single':
+					case 'multi':
+					case 'zipper':
+					default:
+						if(is_array(deserialize($objDownload->fileSRC)))
+						{
+							foreach(deserialize($objDownload->fileSRC) as $file)
+							{
+								$objFile = \FilesModel::findByUuid($file);
+								$objFile = new \File($objFile->path, true);
+
+								$arrFiles[] = (object) array
+								(
+									'name'      => $objFile->name,
+									'url'       => $strUrl . "?downloadId=" . $objDownload->id . "&fileIndex=" . $index,
+									'index'     => $index++,
+									'filesize'  => $this->getReadableSize($objFile->filesize, 1),
+									'icon'      => \Image::getPath($objFile->icon),
+									'mime'      => $objFile->mime,
+									'extension' => $objFile->extension,
+									'path'      => $objFile->dirname
+								);
+							}
+						}
+
+						$objDownload->fileSRC = $arrFiles;
+						$objDownload->url = $strUrl . "?downloadId=" . $objDownload->id;
+
+						break;
 				}
 
-				$objDownload->fileSRC = $arrFiles;
-				$objDownload->url = \Environment::get('request') . "?downloadId=" . $objDownload->id;
+
 				$objDownload->hasAccess = $this->hasAccess($objDownload);
 				$arrDownloads[] = $objDownload;
 			}
 		}
 
-		if(count($arrDownloads))
+		if(!empty($arrDownloads))
 		{
 			$arrDownloads[0]->css .= ' first';
 			$arrDownloads[count($arrDownloads) - 1]->css .= ' last';
@@ -134,11 +182,11 @@ class ModuleDownloadCategory extends ModuleDownload
 			{
 				$objTemplate = new \FrontendTemplate($this->category_template);
 				$objTemplate->setData(((array) $element));
-				$html .= $objTemplate->parse();
+				$strBuffer .= $objTemplate->parse();
 			}
 		}
 
-		$this->Template->html = $html;
+		$this->Template->html = $strBuffer;
 	}
 
 	private function hasAccess($item)

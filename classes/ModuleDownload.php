@@ -8,12 +8,13 @@ abstract class ModuleDownload extends \Module
 	{
 		$objDownload = $this->Database->prepare("SELECT * FROM tl_download_item WHERE id=?")->execute($downloadId);
 		$objDownload->fileSRC = deserialize($objDownload->fileSRC);
+
 		switch($objDownload->type)
 		{
 			case 'zipper':
-				$strTemp = 'system/tmp/'. md5(uniqid(mt_rand(), true));
+				$strPath = 'system/tmp/'. md5(uniqid(mt_rand(), true));
 				$strName = standardize($objDownload->title) . '.zip';
-				$objArchive = new \ZipWriter($strTemp);
+				$objArchive = new \ZipWriter($strPath);
 
 				foreach($objDownload->fileSRC as $fileSRC)
 				{
@@ -23,6 +24,7 @@ abstract class ModuleDownload extends \Module
 
 				$objArchive->close();
 				break;
+
 			case 'single':
 			case 'multi':
 			default:
@@ -34,13 +36,13 @@ abstract class ModuleDownload extends \Module
 				}
 
 				$objFile = \FilesModel::findByUuid($objDownload->fileSRC[$intFileIndex]);
-				$strTemp = $objFile->path;
-				$strName = standardize($objDownload->title) .  substr($objFile->path, strrpos($objFile->path, "."));
+				$strPath = $objFile->path;
+				$strName = standardize($objDownload->title) . (\Input::get('fileIndex', '') != '' ? '-' . ($intFileIndex + 1) : '') . '.' . $objFile->extension;
 
 				break;
 		}
 
-		$objFile = new \File($strTemp, true);
+		$objFile = new \File($strPath, true);
 		$objFile->sendToBrowser($strName);
 	}
 }
