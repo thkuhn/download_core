@@ -61,14 +61,14 @@ class ModuleDownloadCategory extends ModuleDownload
 	protected function compile()
 	{
 
-		if(\Input::get('downloadId') && FE_USER_LOGGED_IN)
+		if (\Input::get('downloadId') && FE_USER_LOGGED_IN)
 		{
 			$this->sendDownloadToBrowser(\Input::get('downloadId'));
 		}
 
 		$strBuffer = '';
 
-		if(\Input::get('category'))
+		if (\Input::get('category'))
 		{
 			$objCategory = \DownloadStructureModel::findByAlias(\Input::get('category'));
 		}
@@ -89,16 +89,25 @@ class ModuleDownloadCategory extends ModuleDownload
 
 		$strUrl = \Environment::get('request');
 
-		$arrDownloads = array();
-		$objDownloads = $this->Database->prepare("SELECT * FROM tl_download_item WHERE pid=? ORDER BY sorting ASC")->execute($objCategory->id);
-
-		if($objDownloads !== null)
+		$strCondPublished = '';
+		if (!BE_USER_LOGGED_IN)
 		{
-			while($objDownloads->next())
+			$time = time();
+			$strCondPublished = " AND (start='' OR start<='".$time."') AND (stop='' OR stop>'" . $time. "') AND published='1'";
+		}
+
+		$arrDownloads = array();
+		$objDownloads = $this->Database
+			->prepare("SELECT * FROM tl_download_item WHERE pid=? " . $strCondPublished . " ORDER BY sorting ASC")
+			->execute($objCategory->id);
+
+		if ($objDownloads !== null)
+		{
+			while ($objDownloads->next())
 			{
 				$objDownload = (object) $objDownloads->row();
 
-				if($objDownload->addImage)
+				if ($objDownload->addImage)
 				{
 					$arrFiles = array();
 					foreach(deserialize($objDownload->singleSRC) as $file)
@@ -149,9 +158,9 @@ class ModuleDownloadCategory extends ModuleDownload
 					case 'multi':
 					case 'zipper':
 					default:
-						if(is_array(deserialize($objDownload->fileSRC)))
+						if (is_array(deserialize($objDownload->fileSRC)))
 						{
-							foreach(deserialize($objDownload->fileSRC) as $file)
+							foreach (deserialize($objDownload->fileSRC) as $file)
 							{
 								$objFile = \FilesModel::findByUuid($file);
 								$objFile = new \File($objFile->path, true);
@@ -182,12 +191,12 @@ class ModuleDownloadCategory extends ModuleDownload
 			}
 		}
 
-		if(!empty($arrDownloads))
+		if (!empty($arrDownloads))
 		{
 			$arrDownloads[0]->css .= ' first';
 			$arrDownloads[count($arrDownloads) - 1]->css .= ' last';
 
-			foreach($arrDownloads as $element)
+			foreach ($arrDownloads as $element)
 			{
 				$objTemplate = new \FrontendTemplate($this->category_template);
 				$objTemplate->setData(((array) $element));
