@@ -140,8 +140,8 @@ $GLOBALS['TL_DCA']['tl_download_structure'] = array
 	(
 		'__selector__'                => array('type', 'addImage', 'protected', 'published'),
 		'default'                     => '{title_legend},title,type,alias,cssClass',
-		'regular'                     => '{title_legend},title,type,alias,cssClass;{image_legend},addImage;{protected_legend},protected;{published_legend},published',
-		'redirect'                    => '{title_legend},title,type,alias,cssClass;{image_legend},addImage;{protected_legend},protected;{redirect_legend},redirectURL;{published_legend},published',
+		'regular'                     => '{title_legend},title,type,alias,cssClass,teaser,text;{image_legend},addImage;{protected_legend},protected;{published_legend},published',
+		'redirect'                    => '{title_legend},title,type,alias,cssClass,teaser,text;{image_legend},addImage;{protected_legend},protected;{redirect_legend},redirectURL;{published_legend},published',
 	),
 	'subpalettes' => array
 	(
@@ -201,6 +201,22 @@ $GLOBALS['TL_DCA']['tl_download_structure'] = array
 			'eval'                    => array('helpwizard'=>false, 'mandatory' => true, 'includeBlankOption' => true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_download_structure']['type_option'],
 			'sql'                     => "varchar(32) NOT NULL default ''"
+		),
+		'teaser' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_download_structure']['teaser'],
+			'inputType'               => 'textarea',
+			'search'                  => true,
+			'eval'                    => array('mandatory'=>false, 'rte'=>'tinyMCE', 'tl_class'=>'clr'),
+			'sql'                     => "text NOT NULL"
+		),
+		'text' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_download_structure']['text'],
+			'inputType'               => 'textarea',
+			'search'                  => true,
+			'eval'                    => array('mandatory'=>false, 'rte'=>'tinyMCE', 'tl_class'=>'clr'),
+			'sql'                     => "text NOT NULL"
 		),
 		'cssClass' => array
 		(

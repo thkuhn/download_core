@@ -74,8 +74,17 @@ class ModuleDownloadCategory extends ModuleDownload
 		}
 		else
 		{
-			$this->Template->html = $strBuffer;
-			return ;
+			$this->Template->downloads = $strBuffer;
+		}
+
+		$this->Template->objCategory = $objCategory;
+		$this->Template->category_headline = $objCategory->title;
+		$this->Template->category_teaser = $objCategory->teaser;
+		$this->Template->category_text = $objCategory->text;
+
+		if ($objCategory->addImage)
+		{
+			$this->Template->category_image = \FilesModel::findByUuid($objCategory->singleSRC);
 		}
 
 		$strUrl = \Environment::get('request');
@@ -186,7 +195,7 @@ class ModuleDownloadCategory extends ModuleDownload
 			}
 		}
 
-		$this->Template->html = $strBuffer;
+		$this->Template->downloads = $strBuffer;
 	}
 
 	private function hasAccess($item)

@@ -139,7 +139,7 @@ $GLOBALS['TL_DCA']['tl_download_item'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_download_item']['teaser'],
 			'inputType'               => 'textarea',
 			'search'                  => true,
-			'eval'                    => array('mandatory'=>false),
+			'eval'                    => array('mandatory'=>false, 'rte'=>'tinyMCE', 'tl_class'=>'clr'),
 			'sql'                     => "text NOT NULL"
 		),
 		'text' => array
@@ -147,7 +147,7 @@ $GLOBALS['TL_DCA']['tl_download_item'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_download_item']['text'],
 			'inputType'               => 'textarea',
 			'search'                  => true,
-			'eval'                    => array('mandatory'=>false),
+			'eval'                    => array('mandatory'=>false, 'rte'=>'tinyMCE', 'tl_class'=>'clr'),
 			'sql'                     => "text NOT NULL"
 		),
 		'protected' => array
