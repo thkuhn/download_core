@@ -4,7 +4,7 @@ $GLOBALS['TL_LANG']['tl_download_item']['title_legend'] = 'Allgemein';
 $GLOBALS['TL_LANG']['tl_download_item']['protected_legend'] = 'Schutz';
 $GLOBALS['TL_LANG']['tl_download_item']['image_legend'] = 'Bilder';
 $GLOBALS['TL_LANG']['tl_download_item']['download_legend'] = 'Download';
-$GLOBALS['TL_LANG']['tl_download_item']['published_legend'] = 'Verööffentlichen';
+$GLOBALS['TL_LANG']['tl_download_item']['published_legend'] = 'Veröffentlichen';
 
 $GLOBALS['TL_LANG']['tl_download_item']['title'] = array('Bezeichnung', 'Geben Sie eine Bezeichnung für das Download-Element an.');
 $GLOBALS['TL_LANG']['tl_download_item']['type'] = array('Typ', 'Wählen Sie bitte den Typen aus.');
@@ -34,3 +34,4 @@ $GLOBALS['TL_LANG']['tl_download_item']['editheader'] = array('Archiv-Einstellun
 $GLOBALS['TL_LANG']['tl_download_item']['copy'] = array('Download duplizieren', 'Download ID %s duplizieren');
 $GLOBALS['TL_LANG']['tl_download_item']['cut'] = array('Download verschieben', 'Download ID %s verschieben');
 $GLOBALS['TL_LANG']['tl_download_item']['delete'] = array('Download löschen', 'Download ID %s löschen');
+$GLOBALS['TL_LANG']['tl_download_item']['toggle'] = array('Veröffentlichen/unveröffentlichen', 'Download ID %s veröffentlichen/unveröffentlichen');

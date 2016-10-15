@@ -73,6 +73,13 @@ $GLOBALS['TL_DCA']['tl_download_item'] = array
 				'icon'                => 'delete.gif',
 				'attributes'          => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"'
 			),
+			'toggle' => array
+			(
+				'label'               => &$GLOBALS['TL_LANG']['tl_download_item']['toggle'],
+				'icon'                => 'visible.gif',
+				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
+				'button_callback'     => array('tl_download_item', 'toggleIcon')
+			),
 			'show' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_download_item']['show'],
@@ -251,11 +258,133 @@ class tl_download_item extends Backend
 	public function __construct()
 	{
 		parent::__construct();
+
+		$this->import('BackendUser', 'User');
 	}
 
 	public function listItems($arrRow)
 	{
 		return $arrRow['title'];
+	}
+
+	/**
+	 * Check permissions to edit table tl_calendar_events
+	 */
+	// TODO: implement correct permissions checks
+	public function checkPermission()
+	{
+		if ($this->User->isAdmin)
+		{
+			return;
+		}
+
+		$id = strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
+
+		// Check current action
+		switch (Input::get('act'))
+		{
+
+			case 'paste':
+			case 'toggle':
+
+			default:
+				// Allow
+				break;
+		}
+	}
+
+
+	/**
+	 * Return the "toggle visibility" button
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
+	{
+
+		if (strlen(Input::get('tid')))
+		{
+			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->redirect($this->getReferer());
+		}
+
+		// Check permissions AFTER checking the tid, so hacking attempts are logged
+		if (!$this->User->hasAccess('tl_download_item::published', 'alexf'))
+		{
+			return '';
+		}
+
+		$href .= '&amp;tid='.$row['id'].'&amp;state='.($row['published'] ? '' : 1);
+
+		if (!$row['published'])
+		{
+			$icon = 'invisible.gif';
+		}
+
+		return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"').'</a> ';
+	}
+
+
+	/**
+	 * Publish/unpublish a download item
+	 *
+	 * @param integer       $intId
+	 * @param boolean       $blnVisible
+	 * @param DataContainer $dc
+	 */
+	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
+	{
+
+		// Set the ID and action
+		Input::setGet('id', $intId);
+		Input::setGet('act', 'toggle');
+
+		if ($dc)
+		{
+			$dc->id = $intId; // see #8043
+		}
+
+		// $this->checkPermission();
+
+		// Check the field access
+		if (!$this->User->hasAccess('tl_download_item::published', 'alexf'))
+		{
+			$this->log('Not enough permissions to publish/unpublish download item ID "'.$intId.'"', __METHOD__, TL_ERROR);
+			$this->redirect('contao/main.php?act=error');
+		}
+
+		$objVersions = new Versions('tl_download_item', $intId);
+		$objVersions->initialize();
+
+		// Trigger the save_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_download_item']['fields']['published']['save_callback']))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_download_item']['fields']['published']['save_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, ($dc ?: $this));
+				}
+				elseif (is_callable($callback))
+				{
+					$blnVisible = $callback($blnVisible, ($dc ?: $this));
+				}
+			}
+		}
+
+		// Update the database
+		$this->Database->prepare("UPDATE tl_download_item SET tstamp=". time() .", published = '" . ($blnVisible ? '1' : '') . "' WHERE id=?")
+			->execute($intId);
+
+		$objVersions->create();
 	}
 
 	public function setMultiSrcFlags($varValue, DataContainer $dc)
