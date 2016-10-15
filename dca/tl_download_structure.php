@@ -40,7 +40,7 @@ $GLOBALS['TL_DCA']['tl_download_structure'] = array
 		(
 			'mode'                    => 5,
 			'icon'                    => 'pagemounts.gif',
-			'paste_button_callback'   => array('tl_download_structure', 'pastePage'),
+			'paste_button_callback'   => array('tl_download_structure', 'pasteCategory'),
 			'panelLayout'             => 'filter,search'
 		),
 		'label' => array
@@ -80,7 +80,7 @@ $GLOBALS['TL_DCA']['tl_download_structure'] = array
 				'label'               => &$GLOBALS['TL_LANG']['tl_download_structure']['edit'],
 				'href'                => 'act=edit',
 				'icon'                => 'header.gif',
-				'button_callback'     => array('tl_download_structure', 'editPage')
+				'button_callback'     => array('tl_download_structure', 'editCategory')
 			),
 			'copy' => array
 			(
@@ -88,7 +88,7 @@ $GLOBALS['TL_DCA']['tl_download_structure'] = array
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.gif',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"',
-				'button_callback'     => array('tl_download_structure', 'copyPage')
+				'button_callback'     => array('tl_download_structure', 'copyCategory')
 			),
 			'copyChilds' => array
 			(
@@ -96,7 +96,7 @@ $GLOBALS['TL_DCA']['tl_download_structure'] = array
 				'href'                => 'act=paste&amp;mode=copy&amp;childs=1',
 				'icon'                => 'copychilds.gif',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"',
-				'button_callback'     => array('tl_download_structure', 'copyPageWithSubpages')
+				'button_callback'     => array('tl_download_structure', 'copyCategoryWithSubcategories')
 			),
 			'cut' => array
 			(
@@ -104,7 +104,7 @@ $GLOBALS['TL_DCA']['tl_download_structure'] = array
 				'href'                => 'act=paste&amp;mode=cut',
 				'icon'                => 'cut.gif',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"',
-				'button_callback'     => array('tl_download_structure', 'cutPage')
+				'button_callback'     => array('tl_download_structure', 'cutCategory')
 			),
 			'delete' => array
 			(
@@ -112,7 +112,7 @@ $GLOBALS['TL_DCA']['tl_download_structure'] = array
 				'href'                => 'act=delete',
 				'icon'                => 'delete.gif',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
-				'button_callback'     => array('tl_download_structure', 'deletePage')
+				'button_callback'     => array('tl_download_structure', 'deleteCategory')
 			),
 			'toggle' => array
 			(
@@ -308,6 +308,8 @@ if (Input::get('popup'))
 }
 
 
+// TODO: this class must be reworked or clened, uses a lot of tl_page stuff!
+
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -329,6 +331,7 @@ class tl_download_structure extends Backend
 	/**
 	 * Check permissions to edit table tl_download_structure
 	 */
+	// TODO: Fix method, use correct permissions etc. (not the page structure related permissions)
 	public function checkPermission()
 	{
 		if ($this->User->isAdmin)
@@ -545,19 +548,11 @@ class tl_download_structure extends Backend
 
 
 	/**
-	 * Add the breadcrumb menu
-	 */
-	public function addBreadcrumb()
-	{
-		Backend::addPagesBreadcrumb();
-	}
-
-
-	/**
 	 * Make new top-level pages root pages
 	 *
 	 * @param DataContainer $dc
 	 */
+	// TODO: Fix method (we are not handling pages here)
 	public function setRootType(DataContainer $dc)
 	{
 		if (Input::get('act') != 'create')
@@ -594,6 +589,7 @@ class tl_download_structure extends Backend
 	 *
 	 * @throws Exception
 	 */
+	// TODO: Fix method (we are not handling pages here)
 	public function checkRootType($varValue, DataContainer $dc)
 	{
 		if ($varValue != 'root' && $dc->activeRecord->pid == 0)
@@ -604,21 +600,6 @@ class tl_download_structure extends Backend
 		return $varValue;
 	}
 
-
-	/**
-	 * Show a warning if there is no language fallback page
-	 */
-	public function showFallbackWarning()
-	{
-		if (Input::get('act') != '')
-		{
-			return;
-		}
-
-		$this->import('Messages');
-		Message::addRaw($this->Messages->languageFallback());
-		Message::addRaw($this->Messages->topLevelRoot());
-	}
 
 
 	/**
@@ -631,6 +612,7 @@ class tl_download_structure extends Backend
 	 *
 	 * @throws Exception
 	 */
+	// TODO: Fix method (we are not handling pages here)
 	public function generateAlias($varValue, DataContainer $dc)
 	{
 		$autoAlias = false;
@@ -641,6 +623,7 @@ class tl_download_structure extends Backend
 			$autoAlias = true;
 			$varValue = StringUtil::generateAlias($dc->activeRecord->title);
 
+// TODO: check this folder stuff (we ar not handling pages here)
 			// Generate folder URL aliases (see #4933)
 			if (Config::get('folderUrl'))
 			{
@@ -717,254 +700,64 @@ class tl_download_structure extends Backend
 		return $varValue;
 	}
 
-
-	/**
-	 * Automatically create an article in the main column of a new page
-	 *
-	 * @param DataContainer $dc
-	 */
-	public function generateArticle(DataContainer $dc)
-	{
-		// Return if there is no active record (override all)
-		if (!$dc->activeRecord)
-		{
-			return;
-		}
-
-		// Existing or not a regular page
-		if ($dc->activeRecord->tstamp > 0 || !in_array($dc->activeRecord->type, array('regular', 'error_403', 'error_404')))
-		{
-			return;
-		}
-
-		$new_records = $this->Session->get('new_records');
-
-		// Not a new page
-		if (!$new_records || (is_array($new_records[$dc->table]) && !in_array($dc->id, $new_records[$dc->table])))
-		{
-			return;
-		}
-
-		// Check whether there are articles (e.g. on copied pages)
-		$objTotal = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_article WHERE pid=?")
-								   ->execute($dc->id);
-
-		if ($objTotal->count > 0)
-		{
-			return;
-		}
-
-		// Create article
-		$arrSet['pid'] = $dc->id;
-		$arrSet['sorting'] = 128;
-		$arrSet['tstamp'] = time();
-		$arrSet['author'] = $this->User->id;
-		$arrSet['inColumn'] = 'main';
-		$arrSet['title'] = $dc->activeRecord->title;
-		$arrSet['alias'] = str_replace('/', '-', $dc->activeRecord->alias); // see #5168
-		$arrSet['published'] = $dc->activeRecord->published;
-
-		$this->Database->prepare("INSERT INTO tl_article %s")->set($arrSet)->execute();
-	}
-
-
-	/**
-	 * Purge the search index if a page is being deleted
-	 *
-	 * @param DataContainer $dc
-	 */
-	public function purgeSearchIndex(DataContainer $dc)
-	{
-		if (!$dc->id)
-		{
-			return;
-		}
-
-		$objResult = $this->Database->prepare("SELECT id FROM tl_search WHERE pid=?")
-									->execute($dc->id);
-
-		while ($objResult->next())
-		{
-			$this->Database->prepare("DELETE FROM tl_search WHERE id=?")
-						   ->execute($objResult->id);
-
-			$this->Database->prepare("DELETE FROM tl_search_index WHERE pid=?")
-						   ->execute($objResult->id);
-		}
-	}
+//
+//	/**
+//	 * Returns all allowed page types as array
+//	 *
+//	 * @param DataContainer $dc
+//	 *
+//	 * @return string
+//	 */
+//	public function getPageTypes(DataContainer $dc)
+//	{
+//		$arrOptions = array();
+//
+//		foreach (array_keys($GLOBALS['TL_PTY']) as $pty)
+//		{
+//			// Root pages are allowed on the first level only (see #6360)
+//			if ($pty == 'root' && $dc->activeRecord && $dc->activeRecord->pid > 0)
+//			{
+//				continue;
+//			}
+//
+//			// Allow the currently selected option and anything the user has access to
+//			if ($pty == $dc->value || $this->User->hasAccess($pty, 'alpty'))
+//			{
+//				$arrOptions[] = $pty;
+//			}
+//		}
+//
+//		return $arrOptions;
+//	}
+//
+//
+//	/**
+//	 * Return all page layouts grouped by theme
+//	 *
+//	 * @return array
+//	 */
+//	public function getPageLayouts()
+//	{
+//		$objLayout = $this->Database->execute("SELECT l.id, l.name, t.name AS theme FROM tl_layout l LEFT JOIN tl_theme t ON l.pid=t.id ORDER BY t.name, l.name");
+//
+//		if ($objLayout->numRows < 1)
+//		{
+//			return array();
+//		}
+//
+//		$return = array();
+//
+//		while ($objLayout->next())
+//		{
+//			$return[$objLayout->theme][$objLayout->id] = $objLayout->name;
+//		}
+//
+//		return $return;
+//	}
 
 
 	/**
-	 * Check the sitemap alias
-	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
-	 *
-	 * @return mixed
-	 *
-	 * @throws Exception
-	 */
-	public function checkFeedAlias($varValue, DataContainer $dc)
-	{
-		// No change or empty value
-		if ($varValue == $dc->value || $varValue == '')
-		{
-			return $varValue;
-		}
-
-		$varValue = standardize($varValue); // see #5096
-
-		$this->import('Automator');
-		$arrFeeds = $this->Automator->purgeXmlFiles(true);
-
-		// Alias exists
-		if (array_search($varValue, $arrFeeds) !== false)
-		{
-			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
-		}
-
-		return $varValue;
-	}
-
-
-	/**
-	 * Prevent circular references
-	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
-	 *
-	 * @return mixed
-	 *
-	 * @throws Exception
-	 */
-	public function checkJumpTo($varValue, DataContainer $dc)
-	{
-		if ($varValue == $dc->id)
-		{
-			throw new Exception($GLOBALS['TL_LANG']['ERR']['circularReference']);
-		}
-
-		return $varValue;
-	}
-
-
-	/**
-	 * Check the DNS settings
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return mixed
-	 */
-	public function checkDns($varValue)
-	{
-		return str_ireplace(array('http://', 'https://', 'ftp://'), '', $varValue);
-	}
-
-
-	/**
-	 * Make sure there is only one fallback per domain (thanks to Andreas Schempp)
-	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
-	 *
-	 * @return mixed
-	 *
-	 * @throws Exception
-	 */
-	public function checkFallback($varValue, DataContainer $dc)
-	{
-		if ($varValue == '')
-		{
-			return '';
-		}
-
-		$objPage = $this->Database->prepare("SELECT id FROM tl_download_structure WHERE type='root' AND fallback=1 AND dns=? AND id!=?")
-								  ->execute($dc->activeRecord->dns, $dc->activeRecord->id);
-
-		if ($objPage->numRows)
-		{
-			throw new Exception($GLOBALS['TL_LANG']['ERR']['multipleFallback']);
-		}
-
-		return $varValue;
-	}
-
-
-	/**
-	 * Check a static URL
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return mixed
-	 */
-	public function checkStaticUrl($varValue)
-	{
-		if ($varValue != '')
-		{
-			$varValue = preg_replace('@https?://@', '', $varValue);
-		}
-
-		return $varValue;
-	}
-
-
-	/**
-	 * Returns all allowed page types as array
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return string
-	 */
-	public function getPageTypes(DataContainer $dc)
-	{
-		$arrOptions = array();
-
-		foreach (array_keys($GLOBALS['TL_PTY']) as $pty)
-		{
-			// Root pages are allowed on the first level only (see #6360)
-			if ($pty == 'root' && $dc->activeRecord && $dc->activeRecord->pid > 0)
-			{
-				continue;
-			}
-
-			// Allow the currently selected option and anything the user has access to
-			if ($pty == $dc->value || $this->User->hasAccess($pty, 'alpty'))
-			{
-				$arrOptions[] = $pty;
-			}
-		}
-
-		return $arrOptions;
-	}
-
-
-	/**
-	 * Return all page layouts grouped by theme
-	 *
-	 * @return array
-	 */
-	public function getPageLayouts()
-	{
-		$objLayout = $this->Database->execute("SELECT l.id, l.name, t.name AS theme FROM tl_layout l LEFT JOIN tl_theme t ON l.pid=t.id ORDER BY t.name, l.name");
-
-		if ($objLayout->numRows < 1)
-		{
-			return array();
-		}
-
-		$return = array();
-
-		while ($objLayout->next())
-		{
-			$return[$objLayout->theme][$objLayout->id] = $objLayout->name;
-		}
-
-		return $return;
-	}
-
-
-	/**
-	 * Add an image to each page in the tree
+	 * Add an image to each category in the tree
 	 *
 	 * @param array         $row
 	 * @param string        $label
@@ -993,7 +786,8 @@ class tl_download_structure extends Backend
 	 *
 	 * @return string
 	 */
-	public function editPage($row, $href, $label, $title, $icon, $attributes)
+	// TODO: Fix method (we are not handling pages and page types here)
+	public function editCategory($row, $href, $label, $title, $icon, $attributes)
 	{
 		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $row)) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
 	}
@@ -1012,7 +806,8 @@ class tl_download_structure extends Backend
 	 *
 	 * @return string
 	 */
-	public function copyPage($row, $href, $label, $title, $icon, $attributes, $table)
+	// TODO: Fix method (we are not handling pages and page types here)
+	public function copyCategory($row, $href, $label, $title, $icon, $attributes, $table)
 	{
 		if ($GLOBALS['TL_DCA'][$table]['config']['closed'])
 		{
@@ -1036,7 +831,8 @@ class tl_download_structure extends Backend
 	 *
 	 * @return string
 	 */
-	public function copyPageWithSubpages($row, $href, $label, $title, $icon, $attributes, $table)
+	// TODO Fix method (we are not handling pages and page types here)
+	public function copyCategoryWithSubcategories($row, $href, $label, $title, $icon, $attributes, $table)
 	{
 		if ($GLOBALS['TL_DCA'][$table]['config']['closed'])
 		{
@@ -1063,7 +859,8 @@ class tl_download_structure extends Backend
 	 *
 	 * @return string
 	 */
-	public function cutPage($row, $href, $label, $title, $icon, $attributes)
+	// TODO: Fix method (we are not handling pages and page types here)
+	public function cutCategory($row, $href, $label, $title, $icon, $attributes)
 	{
 		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
 	}
@@ -1080,7 +877,8 @@ class tl_download_structure extends Backend
 	 *
 	 * @return string
 	 */
-	public function pastePage(DataContainer $dc, $row, $table, $cr, $arrClipboard=null)
+	// TODO: Fix method (type stuff, permissions stuff etc.: we are not handling pages here)
+	public function pasteCategory(DataContainer $dc, $row, $table, $cr, $arrClipboard=null)
 	{
 		$disablePA = false;
 		$disablePI = false;
@@ -1099,7 +897,7 @@ class tl_download_structure extends Backend
 									  ->limit(1)
 									  ->execute(Input::get('id'));
 
-			if ($objPage->type != 'root')
+			if ($objPage->type == 'root')
 			{
 				$disablePA = true;
 
@@ -1169,117 +967,12 @@ class tl_download_structure extends Backend
 	 *
 	 * @return string
 	 */
-	public function deletePage($row, $href, $label, $title, $icon, $attributes)
+	// TODO: Fix method (we are not handling pages here)
+	public function deleteCategory($row, $href, $label, $title, $icon, $attributes)
 	{
 		$root = func_get_arg(7);
 
 		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_DELETE_PAGE, $row) && ($this->User->isAdmin || !in_array($row['id'], $root))) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
-	}
-
-
-	/**
-	 * Generate an "edit articles" button and return it as string
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 *
-	 * @return string
-	 */
-	public function editArticles($row, $href, $label, $title, $icon)
-	{
-		if (!$this->User->hasAccess('article', 'modules'))
-		{
-			return '';
-		}
-
-		return ($row['type'] == 'regular' || $row['type'] == 'error_403' || $row['type'] == 'error_404') ? '<a href="' . $this->addToUrl($href.'&amp;node='.$row['id']) . '" title="'.specialchars($title).'">'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.gif$/i', '_.gif', $icon)).' ';
-	}
-
-
-	/**
-	 * Automatically generate the folder URL aliases
-	 *
-	 * @param array         $arrButtons
-	 * @param DataContainer $dc
-	 *
-	 * @return array
-	 */
-	public function addAliasButton($arrButtons, DataContainer $dc)
-	{
-		// Generate the aliases
-		if (Input::post('FORM_SUBMIT') == 'tl_select' && isset($_POST['alias']))
-		{
-			$session = $this->Session->getData();
-			$ids = $session['CURRENT']['IDS'];
-
-			foreach ($ids as $id)
-			{
-				$objPage = PageModel::findWithDetails($id);
-
-				if ($objPage === null)
-				{
-					continue;
-				}
-
-				$dc->id = $id;
-				$dc->activeRecord = $objPage;
-
-				$strAlias = '';
-
-				// Generate new alias through save callbacks
-				foreach ($GLOBALS['TL_DCA'][$dc->table]['fields']['alias']['save_callback'] as $callback)
-				{
-					if (is_array($callback))
-					{
-						$this->import($callback[0]);
-						$strAlias = $this->{$callback[0]}->{$callback[1]}($strAlias, $dc);
-					}
-					elseif (is_callable($callback))
-					{
-						$strAlias = $callback($strAlias, $dc);
-					}
-				}
-
-				// The alias has not changed
-				if ($strAlias == $objPage->alias)
-				{
-					continue;
-				}
-
-				// Initialize the version manager
-				$objVersions = new Versions('tl_download_structure', $id);
-				$objVersions->initialize();
-
-				// Store the new alias
-				$this->Database->prepare("UPDATE tl_download_structure SET alias=? WHERE id=?")
-							   ->execute($strAlias, $id);
-
-				// Create a new version
-				$objVersions->create();
-			}
-
-			$this->redirect($this->getReferer());
-		}
-
-		// Add the button
-		$arrButtons['alias'] = '<input type="submit" name="alias" id="alias" class="tl_submit" accesskey="a" value="'.specialchars($GLOBALS['TL_LANG']['MSC']['aliasSelected']).'"> ';
-
-		return $arrButtons;
-	}
-
-
-	/**
-	 * Recursively add pages to a sitemap
-	 *
-	 * @param DataContainer $dc
-	 */
-	public function updateSitemap(DataContainer $dc)
-	{
-		$this->import('Automator');
-		$this->Automator->generateSitemap($dc->id);
 	}
 
 
@@ -1295,6 +988,7 @@ class tl_download_structure extends Backend
 	 *
 	 * @return string
 	 */
+	// TODO: Fix method (permission check; we are not ahandling pages here)
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
 		if (strlen(Input::get('tid')))
@@ -1352,7 +1046,7 @@ class tl_download_structure extends Backend
 		// Check the field access
 		if (!$this->User->hasAccess('tl_download_structure::published', 'alexf'))
 		{
-			$this->log('Not enough permissions to publish/unpublish page ID "'.$intId.'"', __METHOD__, TL_ERROR);
+			$this->log('Not enough permissions to publish/unpublish category ID "'.$intId.'"', __METHOD__, TL_ERROR);
 			$this->redirect('contao/main.php?act=error');
 		}
 
@@ -1377,7 +1071,7 @@ class tl_download_structure extends Backend
 		}
 
 		// Update the database
-		$this->Database->prepare("UPDATE tl_download_structure SET tstamp=". time() .", published='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_download_structure SET tstamp=". time() .", published = '" . ($blnVisible ? '1' : '') . "' WHERE id=?")
 					   ->execute($intId);
 
 		$objVersions->create();
