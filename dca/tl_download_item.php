@@ -15,7 +15,11 @@ $GLOBALS['TL_DCA']['tl_download_item'] = array
 				'id' => 'primary',
 				'pid' => 'index'
 			)
-		)
+		),
+		'onload_callback'             => array
+			(
+				array('tl_download_item', 'onloadCallback'),
+			),
 	),
 	'list' => array
 	(
@@ -291,6 +295,32 @@ class tl_download_item extends Backend
 				// Allow
 				break;
 		}
+	}
+
+
+	public function onloadCallback($dc)
+	{
+
+		// Modify file select widget config depending on download item type
+		if ($dc->id)
+		{
+			$objItem = \Database::getInstance()
+				->prepare("SELECT * FROM tl_download_item WHERE id=?")
+				->execute($dc->id);
+
+			if ($objItem->type == 'single')
+			{
+				$GLOBALS['TL_DCA']['tl_download_item']['fields']['fileSRC']['eval']['multiple'] = false;
+				$GLOBALS['TL_DCA']['tl_download_item']['fields']['fileSRC']['eval']['fieldType'] = 'radio';
+			}
+			elseif (in_array($objItem->type, array('multi', 'zipper')))
+			{
+				$GLOBALS['TL_DCA']['tl_download_item']['fields']['fileSRC']['eval']['multiple'] = true;
+				$GLOBALS['TL_DCA']['tl_download_item']['fields']['fileSRC']['eval']['fieldType'] = 'checkbox';
+			}
+		}
+
+
 	}
 
 
