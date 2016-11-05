@@ -29,7 +29,7 @@ class Downloads extends \Frontend
 	public function getSearchablePages($arrPages, $intRoot=0, $blnIsSitemap=false)
 	{
 
-		$arrReturn = $arrPages;
+		$arrReturn = array();
 
 		// TODO: find a better solution to identify the downloads page
 		foreach ($arrPages as $i => $strPageURL)
