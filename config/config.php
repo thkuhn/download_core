@@ -23,6 +23,9 @@ array_insert($GLOBALS['TL_CTE']['files'], count($GLOBALS['TL_CTE']['files']), ar
 ));
 
 $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('CDK\Classes\InsertTags', 'myReplaceInsertTags');
+// TODO: implement method
+$GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('CDK\Classes\Downloads', 'getSearchablePages');
+
 
 $GLOBALS['TL_HEAD']['PIXELSPREADDE'] = '<!--
     This Contao OpenSource CMS uses modules from pixelSpread.de

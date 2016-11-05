@@ -8,7 +8,7 @@ ClassLoader::addNamespaces(array
 	'CDK\Elements',
 	'CDK\Controller'
 ));
- 
+
 ClassLoader::addClasses(array
 (
 	'CDK\Elements\ContentDownloadArchive'   => 'system/modules/download_core/elements/ContentDownloadArchive.php',
@@ -20,6 +20,7 @@ ClassLoader::addClasses(array
 
 	'CDK\Classes\InsertTags'                => 'system/modules/download_core/classes/InsertTags.php',
 	'CDK\Classes\ModuleDownload'            => 'system/modules/download_core/classes/ModuleDownload.php',
+	'CDK\Classes\Downloads'                 => 'system/modules/download_core/classes/Downloads.php',
 
 	'CDK\Frontend\ModuleDownloadArchiv'     => 'system/modules/download_core/modules/ModuleDownloadArchiv.php',
 	'CDK\Frontend\ModuleDownloadCategory'   => 'system/modules/download_core/modules/ModuleDownloadCategory.php',
