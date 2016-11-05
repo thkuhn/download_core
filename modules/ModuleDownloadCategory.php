@@ -61,7 +61,7 @@ class ModuleDownloadCategory extends ModuleDownload
 	protected function compile()
 	{
 
-		if (\Input::get('downloadId') && FE_USER_LOGGED_IN)
+		if (\Input::get('downloadId')) //  && FE_USER_LOGGED_IN
 		{
 			$this->sendDownloadToBrowser(\Input::get('downloadId'));
 		}
