@@ -4,19 +4,28 @@
 		<div class="download-preview-image image">
 			<div class="overflow">
 			<a href="<?= $this->previewImage->path; ?>" data-lightbox="<?= md5($this->id); ?>" class="cboxElement"><img src="<?= $this->previewImage->path; ?>"></a>
-			<div class="caption" title="Zum Vergrößern Bild anklicken"><i class="fa fa-search" aria-hidden="true"></i></div>
+<!-- indexer::stop -->
+				<div class="caption" title="Zum Vergrößern Bild anklicken"><i class="fa fa-search" aria-hidden="true"></i></div>
+<!-- indexer::continue -->
 			</div>
 		</div>
 		<?php endif; ?>
 		<div class="download-meta block text">
 			<h2 class="pull-left">
 			<?php if ($this->hasAccess && !in_array($this->type, array('multi'))): ?>
-				<a href="<?= $this->url;?>" title="Datei downloaden"<?= ($this->type == 'external' ? ' target="_new"' : '') ?>><?= $this->title; ?></a>
+<!-- indexer::stop -->
+				<a href="<?= $this->url;?>" title="Datei downloaden"<?= ($this->type == 'external' ? ' target="_new"' : '') ?>>
+<!-- indexer::continue -->
+					<?= $this->title; ?>
+<!-- indexer::stop -->
+				</a>
+<!-- indexer::continue -->
 			<?php else: ?>
 				<?= $this->title; ?>
 			<?php endif; ?>
 			</h2>
 
+<!-- indexer::stop -->
 			<p class="download title pull-right">
 			<?php if ($this->hasAccess): ?>
 				<?php if (!in_array($this->type, array('multi'))): ?>
@@ -25,6 +34,7 @@
 				<a href="#"><img src="files/theme/sysINSIGHT/img/icn_refer.png" title="Download weiterempfehlen"></a>
 			<?php endif; ?>
 			</p>
+<!-- indexer::continue -->
 
 			<div class="description pull-left"><?= $this->text; ?></div>
 
@@ -39,7 +49,9 @@
 					<?php else: ?>
 						<span class="download-image"><img src="<?= $file->icon; ?>"></span> <span class="download-filename"><?= $file->name; ?></span>
 					<?php endif; ?>
+<!-- indexer::stop -->
 					<span class="download-filesize">(<?= $file->filesize; ?>)</span>
+<!-- indexer::continue -->
 				</li>
 				<?php endforeach; ?>
 			</ul>
