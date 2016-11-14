@@ -61,6 +61,8 @@ class ModuleDownloadCategory extends ModuleDownload
 	protected function compile()
 	{
 
+		global $objPage;
+
 		if (\Input::get('downloadId')) //  && FE_USER_LOGGED_IN
 		{
 			$this->sendDownloadToBrowser(\Input::get('downloadId'));
@@ -71,6 +73,9 @@ class ModuleDownloadCategory extends ModuleDownload
 		if (\Input::get('category'))
 		{
 			$objCategory = \DownloadStructureModel::findByAlias(\Input::get('category'));
+
+			$objPage->pageTitle = 'Downloads - ' . $objCategory->title;
+
 		}
 		else
 		{

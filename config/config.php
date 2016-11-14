@@ -23,12 +23,11 @@ array_insert($GLOBALS['TL_CTE']['files'], count($GLOBALS['TL_CTE']['files']), ar
 ));
 
 $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('CDK\Classes\InsertTags', 'myReplaceInsertTags');
-// TODO: implement method
 $GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('CDK\Classes\Downloads', 'getSearchablePages');
 
 
-$GLOBALS['TL_HEAD']['PIXELSPREADDE'] = '<!--
-    This Contao OpenSource CMS uses modules from pixelSpread.de
-    Copyright (c)2012 - ' . date("Y") . ' by Sascha Brandhoff :: Extensions of pixelSpread.de are copyright of their respective owners
-    Visit our website at http://www.pixelSpread.de for more information
-//-->';
+//$GLOBALS['TL_HEAD']['PIXELSPREADDE'] = '<!--
+//    This Contao OpenSource CMS uses modules from pixelSpread.de
+//    Copyright (c)2012 - ' . date("Y") . ' by Sascha Brandhoff :: Extensions of pixelSpread.de are copyright of their respective owners
+//    Visit our website at http://www.pixelSpread.de for more information
+////-->';
