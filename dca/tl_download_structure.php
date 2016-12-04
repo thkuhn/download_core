@@ -8,22 +8,6 @@ $GLOBALS['TL_DCA']['tl_download_structure'] = array
 		'dataContainer'               => 'Table',
 		'ctable'                      => array('tl_download_item'),
 		'enableVersioning'            => true,
-		'onload_callback' => array
-		(
-//			array('tl_download_structure', 'checkPermission'),
-//			array('tl_download_structure', 'addBreadcrumb'),
-//			array('tl_download_structure', 'setRootType'),
-//			array('tl_download_structure', 'showFallbackWarning')
-		),
-		'onsubmit_callback' => array
-		(
-//			array('tl_download_structure', 'updateSitemap'),
-//			array('tl_download_structure', 'generateArticle')
-		),
-		'ondelete_callback' => array
-		(
-//			array('tl_download_structure', 'purgeSearchIndex')
-		),
 		'sql' => array
 		(
 			'keys' => array
@@ -73,7 +57,6 @@ $GLOBALS['TL_DCA']['tl_download_structure'] = array
 				'label'               => &$GLOBALS['TL_LANG']['tl_download_structure']['downloads'],
 				'href'                => 'table=tl_download_item',
 				'icon'                => 'edit.gif',
-//				'button_callback'     => array('tl_download_structure', 'editArticles')
 			),
 			'edit' => array
 			(
@@ -308,7 +291,7 @@ if (Input::get('popup'))
 }
 
 
-// TODO: this class must be reworked or clened, uses a lot of tl_page stuff!
+// TODO: this class must be reworked or cleaned, uses a lot of tl_page stuff!
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.

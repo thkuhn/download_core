@@ -39,7 +39,5 @@ TemplateLoader::addFiles(array
 
 	'mod_download_archiv'     => 'system/modules/download_core/templates/modules',
 	'mod_download_category'   => 'system/modules/download_core/templates/modules',
-//	'mod_download_element'    => 'system/modules/download_core/templates/modules',
-//	'mod_download_index'      => 'system/modules/download_core/templates/modules',
 	'mod_download_navigation' => 'system/modules/download_core/templates/modules'
 ));
