@@ -33,6 +33,7 @@ class ModuleDownloadNavigation extends \Module
 
 		$pid = 0;
 
+/*
 		if($this->download_levelOffset != 0)
 		{
 			$pid = $this->trail[$this->download_levelOffset - 1];
@@ -45,7 +46,7 @@ class ModuleDownloadNavigation extends \Module
 		{
 			$pid = $this->download_referenceCategory;
 		}
-
+*/
 
 		$this->items = $this->getCategory($pid, $this->download_levelOffset, 0, $this->download_hardlimit);
 
